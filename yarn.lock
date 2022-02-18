@@ -8051,10 +8051,10 @@
   "resolved" "https://registry.nlark.com/slash/download/slash-4.0.0.tgz"
   "version" "4.0.0"
 
-"snarkyjs@^0.1.11":
-  "integrity" "sha512-fXt6nVO8uL9w/ZH2y/9jN0heUEj6qpIlazt2kBewm0jeS4lCN2K0uMOUcxxjf97vKTYsKjGuEv+ZUK6xnQJZtw=="
-  "resolved" "https://registry.npmmirror.com/snarkyjs/download/snarkyjs-0.1.11.tgz"
-  "version" "0.1.11"
+"snarkyjs@^0.2.0":
+  "integrity" "sha512-pgYSb04eJWg0RwBQsVp8v2SE/6d3ukMBkcc9zzF8mPny6vp53BSV5eob4/hlIqMDkGUCnpD5teS9ZAFQsPNxiw=="
+  "resolved" "https://registry.npmjs.org/snarkyjs/-/snarkyjs-0.2.0.tgz"
+  "version" "0.2.0"
   dependencies:
     "env" "^0.0.2"
     "reflect-metadata" "^0.1.13"

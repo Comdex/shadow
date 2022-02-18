@@ -5,26 +5,32 @@ import {
     UInt64,
     Poseidon,
 } from "snarkyjs";
-import { Account } from "./contract_type";
+import { DataStack } from "../lib/data_store/DataStack";
+import { KeyedDataStore } from "../lib/data_store/KeyedDataStore";
+import { StringCircuitValue } from "../lib/utils/StringCircuitValue";
+
+import { Account, AccountKeys, EncryptedAccount, TxReciptPool, } from "./contract_type";
 import { fieldToHex } from "./util";
 
-// import { Keyed, KeyedDataStore } from 'snarkyjs/dist/server/lib/data_store';
+let accStore = new KeyedDataStore<string, EncryptedAccount>();
 
 
-// const AccountDbDepth: number = 32;
-// const AccountDb = KeyedAccumulatorFactory<Field, Account>(
-//   AccountDbDepth
-// );
-// type AccountDb = InstanceType<typeof AccountDb>;
+let accKeysStore = new KeyedDataStore<string, AccountKeys>();
 
-// const keyFunc = (v: Account): Field => {
-//     return v.name;
-// };
-// //It looks like the API doesn't work
-// let testDb = AccountDb.create(keyFunc, DataStore.Keyed.InMemory(Account, Field, keyFunc, AccountDbDepth));
-// testDb.key = keyFunc;
 
-//mock checkProof
+let pendingTxStore = new KeyedDataStore<string, TxReciptPool>();
+
+
+let finishedTxStore = new KeyedDataStore<string, TxReciptPool>();
+
+
+let nonceSetStore = new DataStack();
+
+
+
+
+
+
 function checkProof(proof: Field, root: Field, value: Account): Bool {
     return proof.equals(root);
 }
@@ -68,6 +74,6 @@ class AccountDb {
     }
   }
 
-  var testDb: AccountDb = new AccountDb();
 
-  export { AccountDb, checkProof, testDb };
+
+  export { accStore, accKeysStore, pendingTxStore, finishedTxStore, nonceSetStore };

@@ -1,3 +1,4 @@
+import { useTabsList } from '@mui/material';
 import {
   Field,
   PrivateKey,
@@ -18,7 +19,9 @@ import { StringCircuitValue } from '../lib/utils/StringCircuitValue';
 import {
   Account, AccountKeys, EncryptedAccount,
 } from "./contract_type";
+import { encryptByPubKey, getHash, getPubKeyFromWallet } from "../lib/utils/encrypt";
 import { accStore } from "./mock";
+import { Hash } from 'crypto';
 
 export { Shadow };
 
@@ -50,7 +53,7 @@ class Shadow extends SmartContract {
   @method async registered(name: StringCircuitValue, accKeysStore: KeyedDataStore<String, AccountKeys>): Promise<Bool> {
       const accKeysCommitment = await this.accKeysCommitment.get();
 
-      let accKeyOptional = accKeysStore.get(name.toString());
+      let accKeyOptional = accKeysStore.get(getHash(name.toString()));
       let root = accKeysStore.getMerkleRoot();
 
       return accKeysCommitment.equals(root).and(accKeyOptional.isSome.equals(true));
@@ -58,13 +61,34 @@ class Shadow extends SmartContract {
 
   @method async register(
     name: StringCircuitValue,
-    pubKey: PublicKey,
-    priKey: PrivateKey,
+    pwd: StringCircuitValue,
     accKeysStore: KeyedDataStore<String, AccountKeys>,
     accStore: KeyedDataStore<String, EncryptedAccount>,
   ) {
       const isRegistered = await this.registered(name, accKeysStore);
       isRegistered.assertEquals(false);
+      //generate account encrypt keypair
+      const acPriKey = PrivateKey.random();
+      const acPubKey = acPriKey.toPublicKey();
+
+      //get extern wallet pubkey
+      let walletPubKey = getPubKeyFromWallet();
+      let priKeyData: Field[] = acPriKey.toFields();
+      //encrypt the prikey to save
+      let encryptedAcPriKey = encryptByPubKey(priKeyData, walletPubKey);
+      let accountKeys = new AccountKeys(acPubKey, encryptedAcPriKey);
+
+      accKeysStore.set(getHash(name.toString()), accountKeys);
+      let root = accKeysStore.getMerkleRoot();
+      this.accKeysCommitment.set(root);
+      
+      let pwdHash = Poseidon.hash(pwd.toFields());
+      let newAccount = new Account(name.toField(), UInt64.fromNumber(0), pwdHash);
+      let encryptedAccount = newAccount.encrypt(acPubKey);
+
+      accStore.set(getHash(name.toString()), encryptedAccount);
+      let accStoreRoot = accStore.getMerkleRoot();
+      this.accCommitment.set(accStoreRoot);
   }
   
   @method async deposit() {
@@ -76,7 +100,8 @@ class Shadow extends SmartContract {
   }
 
   @method async transfer() {
-    
+
   }
+
 
 }

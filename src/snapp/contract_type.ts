@@ -61,17 +61,12 @@ class Account extends CircuitValue {
 
   class AccountKeys extends CircuitValue {
     @prop publicKey: PublicKey;
-    @prop encryptedPriKey: PrivateKey;
+    @prop encryptedPriKey: Field[];
     
-    constructor(publicKey: PublicKey, priKey: PrivateKey) {
+    constructor(publicKey: PublicKey, priKey: Field[]) {
       super();
       this.publicKey = publicKey;
       this.encryptedPriKey = priKey;
-    }
-
-    //mock
-    decryptPriKey(): PrivateKey {
-      return this.encryptedPriKey;
     }
   }
 

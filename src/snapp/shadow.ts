@@ -17,7 +17,7 @@ import {
 import { KeyedDataStore } from '../lib/data_store/KeyedDataStore';
 import { StringCircuitValue } from '../lib/utils/StringCircuitValue';
 import {
-  Account, AccountKeys, EncryptedAccount,
+  Account, AccountKeys, EncryptedAccount, TxReciptPool,
 } from "./contract_type";
 import { encryptByPubKey, getHash, getPubKeyFromWallet } from "../lib/utils/encrypt";
 import { accStore } from "./mock";
@@ -91,8 +91,27 @@ class Shadow extends SmartContract {
       this.accCommitment.set(accStoreRoot);
   }
   
-  @method async deposit() {
+  @method async fund(
+    name: StringCircuitValue,
+    amount: UInt64,
+    accKeysStore: KeyedDataStore<String, AccountKeys>,
+    pendingTxStore: KeyedDataStore<string, TxReciptPool>,
+    finishedTxStore: KeyedDataStore<string, TxReciptPool>,
+  ) {
+    const isRegistered = await this.registered(name, accKeysStore);
+    isRegistered.assertEquals(false);
 
+    let pendinngTxRoot = pendingTxStore.getMerkleRoot();
+    const pendingTxCommitment = await this.pendingTxCommitment.get();
+    pendinngTxRoot.assertEquals(pendingTxCommitment);
+
+    let finishedTxRoot = finishedTxStore.getMerkleRoot();
+    const finishedTxCommitment = await this.finishedTxCommitment.get();
+    finishedTxCommitment.assertEquals(finishedTxRoot);
+
+    let nameHash = getHash(name.toString());
+    let pendingTxPool = pendingTxStore.get(nameHash);
+    
   }
 
   @method async withdraw() {

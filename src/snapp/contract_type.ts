@@ -6,7 +6,8 @@ import {
     Field,
     UInt64,
     PrivateKey,
-    Poseidon
+    Poseidon,
+    Int64
 } from "snarkyjs";
 
 import { fieldToHex } from "./util";
@@ -130,6 +131,29 @@ class Account extends CircuitValue {
     constructor(txs: EncryptedTxReceipt[]) {
       super();
       this.txs = txs;
+    }
+
+    addTx(tx: EncryptedTxReceipt) {
+      this.txs.push(tx);
+    }
+
+    rollOver(nameHash: Field, priKey: PrivateKey): Int64 {
+      let amount = Int64.zero;
+      this.txs.forEach(encryptedTx => {
+        let tx = encryptedTx.decrypt(priKey);
+        if(tx.fromNameHash.equals(nameHash)) {
+          amount = amount.sub(tx.amount);
+        } else {
+          amount = amount.add(tx.amount);
+        }
+
+      });
+
+      return amount;
+    }
+
+    cleanPool() {
+      this.txs = [];
     }
   }
 

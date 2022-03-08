@@ -12,16 +12,16 @@ import { StringCircuitValue } from "../lib/utils/StringCircuitValue";
 import { Account, AccountKeys, EncryptedAccount, TxReciptPool, } from "./contract_type";
 import { fieldToHex } from "./util";
 
-let accStore = new KeyedDataStore<string, EncryptedAccount>();
+let accStore = new KeyedDataStore<Field, EncryptedAccount>();
 
 
-let accKeysStore = new KeyedDataStore<string, AccountKeys>();
+let accKeysStore = new KeyedDataStore<Field, AccountKeys>();
 
 
-let pendingTxStore = new KeyedDataStore<string, TxReciptPool>();
+let pendingTxStore = new KeyedDataStore<Field, TxReciptPool>();
 
 
-let finishedTxStore = new KeyedDataStore<string, TxReciptPool>();
+let finishedTxStore = new KeyedDataStore<Field, TxReciptPool>();
 
 
 let nonceSetStore = new DataStack();

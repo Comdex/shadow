@@ -13,15 +13,17 @@ import {
   UInt32,
   Bool,
   Circuit,
+  Int64,
 } from 'snarkyjs';
 import { KeyedDataStore } from '../lib/data_store/KeyedDataStore';
 import { StringCircuitValue } from '../lib/utils/StringCircuitValue';
 import {
   Account, AccountKeys, EncryptedAccount, TxReciptPool,
 } from "./contract_type";
-import { encryptByPubKey, getHash, getPubKeyFromWallet } from "../lib/utils/encrypt";
+import { encryptByPubKey, hash, getPubKeyFromWallet } from "../lib/utils/encrypt";
 import { accStore } from "./mock";
 import { Hash } from 'crypto';
+import { resolve } from 'path/posix';
 
 export { Shadow };
 
@@ -50,10 +52,10 @@ class Shadow extends SmartContract {
     this.nonceSetCommitment.set(nonceSetCommitment);
   }
 
-  @method async registered(name: StringCircuitValue, accKeysStore: KeyedDataStore<String, AccountKeys>): Promise<Bool> {
+  @method async registered(name: StringCircuitValue, accKeysStore: KeyedDataStore<Field, AccountKeys>): Promise<Bool> {
       const accKeysCommitment = await this.accKeysCommitment.get();
 
-      let accKeyOptional = accKeysStore.get(getHash(name.toString()));
+      let accKeyOptional = accKeysStore.get(name.hash());
       let root = accKeysStore.getMerkleRoot();
 
       return accKeysCommitment.equals(root).and(accKeyOptional.isSome.equals(true));
@@ -62,8 +64,8 @@ class Shadow extends SmartContract {
   @method async register(
     name: StringCircuitValue,
     pwd: StringCircuitValue,
-    accKeysStore: KeyedDataStore<String, AccountKeys>,
-    accStore: KeyedDataStore<String, EncryptedAccount>,
+    accKeysStore: KeyedDataStore<Field, AccountKeys>,
+    accStore: KeyedDataStore<Field, EncryptedAccount>,
   ) {
       const isRegistered = await this.registered(name, accKeysStore);
       isRegistered.assertEquals(false);
@@ -78,7 +80,7 @@ class Shadow extends SmartContract {
       let encryptedAcPriKey = encryptByPubKey(priKeyData, walletPubKey);
       let accountKeys = new AccountKeys(acPubKey, encryptedAcPriKey);
 
-      accKeysStore.set(getHash(name.toString()), accountKeys);
+      accKeysStore.set(name.hash(), accountKeys);
       let root = accKeysStore.getMerkleRoot();
       this.accKeysCommitment.set(root);
       
@@ -86,7 +88,7 @@ class Shadow extends SmartContract {
       let newAccount = new Account(name.toField(), UInt64.fromNumber(0), pwdHash);
       let encryptedAccount = newAccount.encrypt(acPubKey);
 
-      accStore.set(getHash(name.toString()), encryptedAccount);
+      accStore.set(name.hash(), encryptedAccount);
       let accStoreRoot = accStore.getMerkleRoot();
       this.accCommitment.set(accStoreRoot);
   }
@@ -94,23 +96,38 @@ class Shadow extends SmartContract {
   @method async fund(
     name: StringCircuitValue,
     amount: UInt64,
-    accKeysStore: KeyedDataStore<String, AccountKeys>,
-    pendingTxStore: KeyedDataStore<string, TxReciptPool>,
-    finishedTxStore: KeyedDataStore<string, TxReciptPool>,
+    acPriKey: PrivateKey,
+    accKeysStore: KeyedDataStore<Field, AccountKeys>,
+    accStore: KeyedDataStore<Field, EncryptedAccount>,
+    pendingTxStore: KeyedDataStore<Field, TxReciptPool>,
+    finishedTxStore: KeyedDataStore<Field, TxReciptPool>,
   ) {
     const isRegistered = await this.registered(name, accKeysStore);
     isRegistered.assertEquals(false);
 
-    let pendinngTxRoot = pendingTxStore.getMerkleRoot();
-    const pendingTxCommitment = await this.pendingTxCommitment.get();
-    pendinngTxRoot.assertEquals(pendingTxCommitment);
+    let nameHash = name.hash();
 
-    let finishedTxRoot = finishedTxStore.getMerkleRoot();
-    const finishedTxCommitment = await this.finishedTxCommitment.get();
-    finishedTxCommitment.assertEquals(finishedTxRoot);
+    // let pendinngTxRoot = pendingTxStore.getMerkleRoot();
+    // const pendingTxCommitment = await this.pendingTxCommitment.get();
+    // pendinngTxRoot.assertEquals(pendingTxCommitment);
 
-    let nameHash = getHash(name.toString());
-    let pendingTxPool = pendingTxStore.get(nameHash);
+    // let finishedTxRoot = finishedTxStore.getMerkleRoot();
+    // const finishedTxCommitment = await this.finishedTxCommitment.get();
+    // finishedTxCommitment.assertEquals(finishedTxRoot);
+
+    let pendingTxPoolOption = pendingTxStore.get(nameHash);
+    let pendingTxPool = pendingTxPoolOption.value;
+    let isPoolEmpty = (pendingTxPool!=undefined) && pendingTxPool.isEmpty().toBoolean();
+
+    let changeAmount: Int64 = Circuit.if(pendingTxPoolOption.isSome.and(new Bool(isPoolEmpty).not()),
+                          pendingTxPool?.rollOver(name.hash(), acPriKey), Int64.zero);
+
+    let encryptedAccount = accStore.get(nameHash);
+    encryptedAccount.isSome.assertEquals(true);
+
+    let account = encryptedAccount.value?.decrypt(acPriKey);
+    
+    let lastBalance = 
     
   }
 

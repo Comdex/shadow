@@ -7,7 +7,8 @@ import {
     UInt64,
     PrivateKey,
     Poseidon,
-    Int64
+    Int64,
+    Bool
 } from "snarkyjs";
 
 import { fieldToHex } from "./util";
@@ -154,6 +155,13 @@ class Account extends CircuitValue {
 
     cleanPool() {
       this.txs = [];
+    }
+
+    isEmpty(): Bool {
+      if(this.txs.length === 0) {
+        return new Bool(true);
+      }
+      return new Bool(false);
     }
   }
 

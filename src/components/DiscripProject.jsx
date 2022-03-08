@@ -13,7 +13,7 @@ function DiscripProject() {
             It protects your real wallet address from exposure,  <br/> enables social recovery of wallet without private key, <br/>acts as your passport in crypto world, <br/>and so on.
         </div>
         <div id="output-wrap">
-            <span id="targetDiscripDiv"></span>
+            <span id="targetDiscripDiv" />
             <span style={typingCss}>|</span>
         </div>
     </div>

@@ -36,7 +36,7 @@ class Shadow extends SmartContract {
 
 
   deploy(
-    initialBalance: UInt64, 
+    initialBalance: UInt64,
     accCommitment: Field,
     accKeysCommitment: Field,
     pendingTxCommitment: Field,
@@ -83,7 +83,7 @@ class Shadow extends SmartContract {
       accKeysStore.set(name.hash(), accountKeys);
       let root = accKeysStore.getMerkleRoot();
       this.accKeysCommitment.set(root);
-      
+
       let pwdHash = Poseidon.hash(pwd.toFields());
       let newAccount = new Account(name.toField(), UInt64.fromNumber(0), pwdHash);
       let encryptedAccount = newAccount.encrypt(acPubKey);
@@ -92,7 +92,7 @@ class Shadow extends SmartContract {
       let accStoreRoot = accStore.getMerkleRoot();
       this.accCommitment.set(accStoreRoot);
   }
-  
+
   @method async fund(
     name: StringCircuitValue,
     amount: UInt64,
@@ -126,9 +126,9 @@ class Shadow extends SmartContract {
     encryptedAccount.isSome.assertEquals(true);
 
     let account = encryptedAccount.value?.decrypt(acPriKey);
-    
-    let lastBalance = 
-    
+
+    // let lastBalance =
+
   }
 
   @method async withdraw() {

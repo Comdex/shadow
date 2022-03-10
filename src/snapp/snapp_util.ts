@@ -35,7 +35,7 @@ async function deployContract() {
         const amount = UInt64.fromNumber(1000000000);
         const p = await Party.createSigned(account2);
         p.balance.subInPlace(amount);
-        
+
         console.log("init accountDbCommitment: ", testDb.commitment().toString());
         snapp = new ZKPass(amount, snappPubkey, testDb.commitment());
     })
@@ -43,20 +43,20 @@ async function deployContract() {
     .wait()
     .catch((e) => {
         console.log(e);
-    });     
+    });
 }
 
 async function registerAccount(
-    name: string, 
-    withDrawPublicKey: PublicKey, 
+    name: string,
+    withDrawPublicKey: PublicKey,
     authPublicKey: PublicKey,
     ownerMail: string,
 ) {
     console.log("register account");
     await Mina.transaction(account1, async () => {
-  
+
         await snapp.registerAccount(
-          packBytes(name), 
+          packBytes(name),
           withDrawPublicKey,
           authPublicKey,
           packBytes(ownerMail),
@@ -66,7 +66,7 @@ async function registerAccount(
         .wait()
         .catch((e) => {
             console.log(e);
-        }); 
+        });
 }
 
 async function deposit(
@@ -78,14 +78,14 @@ async function deposit(
     await Mina.transaction(account2, async () => {
         const amount = UInt64.fromNumber(depositAmount);
         const sender = await Party.createSigned(senderPrivateKey);
-    
+
         await snapp.deposit(sender, packBytes(depositName), amount, testDb);
       })
         .send()
         .wait()
         .catch((e) => {
             console.log(e);
-        }); 
+        });
 }
 
 async function transferToName(
@@ -103,7 +103,7 @@ async function transferToName(
       const amount = UInt64.fromNumber(transferAmount);
 
       await snapp.transferToName(
-        SignatureWithName.create(withDrawPrivateKey, snappNonce2.toFields(), packBytes(fromName)), 
+        SignatureWithName.create(withDrawPrivateKey, snappNonce2.toFields(), packBytes(fromName)),
         packBytes(toName),
         amount,
         testDb
@@ -125,15 +125,15 @@ async function withDraw(
    console.log("withDraw");
    const { nonce: snappNonce } = await Mina.getAccount(snappPubkey);
    console.log("nonce: ", snappNonce.toString());
- 
+
    await Mina.transaction(account1, async () => {
      // withdraw fund
      const amount = UInt64.fromNumber(withDrawAmount);
      const receiver = Party.createUnsigned(receiverAddress);
- 
+
      await snapp.withdraw(
-       receiver, 
-       packBytes(name), 
+       receiver,
+       packBytes(name),
        amount,
        SignatureWithSigner.create(withDrawPrivateKey, snappNonce.toFields()),
        testDb

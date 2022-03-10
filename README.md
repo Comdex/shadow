@@ -5,11 +5,17 @@ This template uses TypeScript and React. please go to [./docs](./docs) for more 
 ## How to build
 
 ```sh
-npm run build
+npm run build:dev
 ```
 
 ## How to run tests
 
 ```sh
 npm run test
+```
+
+## How to run
+
+```sh
+npm run serve
 ```

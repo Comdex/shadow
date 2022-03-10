@@ -109,7 +109,7 @@ export class UInt8 extends CircuitValue {
     return [q_, r_];
   }
 
-  /** 
+  /**
    * Integer division.
    *
    * `x.div(y)` returns the floor of `x / y`, that is, the greatest

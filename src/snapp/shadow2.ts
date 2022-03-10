@@ -1,4 +1,3 @@
-import { useTabsList } from '@mui/material';
 import {
   Field,
   PrivateKey,
@@ -20,7 +19,6 @@ import { StringCircuitValue } from '../lib/utils/string';
 import { encryptByPubKey, hash, getPubKeyFromWallet } from "../lib/utils/encrypt";
 import { accStore } from "./mock";
 import { Hash } from 'crypto';
-import { resolve } from 'path/posix';
 import { Accounts, AccountSecret, Account } from '../models/account';
 
 export { Shadow };
@@ -33,7 +31,7 @@ class Shadow extends SmartContract {
 
 
   deploy(
-    initialBalance: UInt64, 
+    initialBalance: UInt64,
     accountsCommitment: Field,
     pendingTxsCommitment: Field,
     finishedTxsCommitment: Field,
@@ -63,14 +61,14 @@ class Shadow extends SmartContract {
   ) {
       const isRegistered = await this.registered(name, accounts);
       isRegistered.assertEquals(false);
-      //generate account encrypt keypair
+      // generate account encrypt keypair
       const acPriKey = PrivateKey.random();
       const acPubKey = acPriKey.toPublicKey();
 
-      //get extern wallet pubkey
+      // get extern wallet pubkey
       let walletPubKey = getPubKeyFromWallet();
       let priKeyData: Field[] = acPriKey.toFields();
-      //encrypt the prikey to save
+      // encrypt the prikey to save
       let encryptedAcPriKey = encryptByPubKey(priKeyData, walletPubKey);
 
       let accountSecret = new AccountSecret(name.toField(), UInt64.zero, pwd.hash());
@@ -82,5 +80,5 @@ class Shadow extends SmartContract {
       let accountsNewRoot = accounts.commitment();
       this.accountsCommitment.set(accountsNewRoot);
   }
-  
+
 }

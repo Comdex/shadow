@@ -41,7 +41,7 @@
     "@material-ui/icons": "^4.11.2",
     "@mui/icons-material": "^5.2.5",
     "@mui/material": "^5.2.4",
-    "snarkyjs": "^0.2.0"
+    "snarkyjs": "0.2.2"
   },
   "devDependencies": {
     "@types/babel__core": "^7.1.14",

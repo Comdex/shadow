@@ -1,15 +1,19 @@
-import { Field, CircuitValue, Poseidon, Bool, Optional } from 'snarkyjs';
+import { Field, CircuitValue, Poseidon, Optional, Bool } from 'snarkyjs';
 
-import { MerklePathElement, MerkleTree } from '../merkle_proof/MerkleTree';
+import { MerklePathElement, MerkleTree } from '../merkle_proof/merkle_tree';
 
-export class KeyedDataStore<K, V extends CircuitValue> {
+// ! NOTE use primitive types as Key, JS uses === for checks inside the map, hence advanced data types such as Objects WILL NOT yield the same result
+export class KeyedMerkleStore<K, V extends CircuitValue> {
+  // the merkle tree doesnt store the actual data, its only a layer ontop of the dataStore map
 
   dataStore: Map<K, V>;
   merkleTree: MerkleTree;
+  defaultValue: V;
 
-  constructor() {
+  constructor(defaultValue: V) {
     this.dataStore = new Map<K, V>();
     this.merkleTree = new MerkleTree();
+    this.defaultValue = defaultValue;
   }
 
   /**
@@ -21,6 +25,7 @@ export class KeyedDataStore<K, V extends CircuitValue> {
     this.merkleTree = new MerkleTree();
 
     let leaves: Field[] = [];
+    // eslint-disable-next-line no-unused-vars
     for (let [key, value] of dataBlobs.entries()) {
       leaves.push(Poseidon.hash(value.toFields()));
     }
@@ -30,8 +35,8 @@ export class KeyedDataStore<K, V extends CircuitValue> {
   }
 
   /**
-   * Validates a Merkle path/proof
-   * @param merklePath Merkle proof/path
+   * Validates a Merkle path
+   * @param merklePath Merkle proof
    * @param targetHash hash of the target element
    * @param merkleRoot root of the merkle tree
    * @returns true if proof is valid
@@ -40,7 +45,7 @@ export class KeyedDataStore<K, V extends CircuitValue> {
     merklePath: MerklePathElement[],
     targetHash: Field,
     merkleRoot: Field
-  ): boolean {
+  ): Bool {
     return MerkleTree.validateProof(merklePath, targetHash, merkleRoot);
   }
 
@@ -80,17 +85,11 @@ export class KeyedDataStore<K, V extends CircuitValue> {
    * @param key
    * @returns value or undefined if not found
    */
-  // get(key: K): V | undefined {
-  //   return this.dataStore.get(key);
-  // }
-  
-  get(key: K): Optional<V | undefined> {
-    let data = this.dataStore.get(key);
-    if(data) {
-      return new Optional(new Bool(true), data);
-    } else {
-      return new Optional(new Bool(false), data);
-    }
+  get(key: K): Optional<V> {
+    return new Optional(
+      new Bool(this.dataStore.get(key) !== undefined),
+      this.dataStore.get(key) || this.defaultValue
+    );
   }
 
   /**
@@ -103,8 +102,10 @@ export class KeyedDataStore<K, V extends CircuitValue> {
     let entry: V | undefined = this.dataStore.get(key);
     if (entry === undefined) {
       // key is new
+
       this.merkleTree.addLeaves([Poseidon.hash(value.toFields())], false);
-      this.dataStore.set(key, value);
+
+      this.dataStore = this.dataStore.set(key, value);
     } else {
       // element already exists in merkle tree, just change the entry so the order doesnt get mixed up#
       let index = this.merkleTree.getIndex(Poseidon.hash(entry.toFields()));

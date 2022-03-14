@@ -6,7 +6,7 @@ export interface Tree {
 }
 
 /**
- *A MerklePathElement has the following structure:
+ * A MerklePathElement has the following structure:
  * direction: Field - Direction of the node, Field(0) for left, Field(1) for right
  * hash: Field - Hash of the node
  * With a list of MerklePathElements you can recreate the merkle root for a specific leaf
@@ -24,8 +24,9 @@ export class MerkleTree {
       levels: [],
     };
   }
+
   /**
-   * clears the tree
+   * resets the tree
    */
   clear() {
     this.tree = {
@@ -35,22 +36,22 @@ export class MerkleTree {
   }
 
   /**
-   * Static function that returns a Merkle store
-   * @param {Field[]} dataArray Data leafes
-   * @param {boolean} hash if true elements in the array will be Poseidon hashed
+   * Static function that returns a Merkle Tree
+   * @param {Field[]} dataArray data leaves
+   * @param {boolean} hash if true elements in the array will be hased using Poseidon, if false they will be inserted directly
    * @return {MerkleStore} Merkle store
    */
   static fromDataLeaves(dataArray: Field[], hash = true): MerkleTree {
-    let merkleStore = new MerkleTree();
+    let tree = new MerkleTree();
 
-    merkleStore.addLeaves(dataArray, hash);
-    return merkleStore;
+    tree.addLeaves(dataArray, hash);
+    return tree;
   }
 
   /**
-   * Adds the hashes of an array of data
-   * @param {Field[]} dataArray Data leafes
-   * @param {boolean} hash if true elements in the array will be Poseidon hashed
+   * Adds the hashes of an array of data to an existing Merkle Tree
+   * @param {Field[]} dataArray data leaves
+   * @param {boolean} hash if true elements in the array will be hased using Poseidon, if false they will be inserted directly
    */
   addLeaves(dataArray: Field[], hash: boolean = true) {
     dataArray.forEach((value: Field) => {
@@ -77,7 +78,7 @@ export class MerkleTree {
   }
 
   /**
-   * Builds the merkle tree based on pre-initialized leafes
+   * Builds the merkle tree based on pre-initialized leaves
    */
   makeTree() {
     let leafCount: number = this.tree.leaves.length;
@@ -95,22 +96,15 @@ export class MerkleTree {
    * Returns the merkle proof
    * @returns {Field | undefined} Merkle root, if not undefined
    */
-  // getMerkleRoot(): Field | undefined {
-  //   if (this.tree.levels.length === 0) {
-  //     return undefined;
-  //   }
-  //   return this.tree.levels[0][0];
-  // }
-
   getMerkleRoot(): Field {
     if (this.tree.levels.length === 0) {
-      return new Field(0);
+      return Field.zero;
     }
     return this.tree.levels[0][0];
   }
 
   /**
-   * Returns a merkle proof/path of an element at a given index
+   * Returns a merkle path of an element at a given index
    * @param {number} index of element
    * @returns {MerklePathElement[] | undefined} merkle path or undefined
    */
@@ -154,9 +148,9 @@ export class MerkleTree {
   }
 
   /**
-   * Validates a merkle proof
+   * Static function to validate a merkle path
    * @param {MerklePathElement[]} merklePath Merkle path leading to the root
-   * @param {Field} leafHash Hash of element that needs validation
+   * @param {Field} leafHash Hash of element that needs checking
    * @param {Field} merkleRoot Root of the merkle tree
    * @returns {boolean} true when the merkle path matches the merkle root
    */
@@ -164,10 +158,10 @@ export class MerkleTree {
     merklePath: MerklePathElement[],
     targetHash: Field,
     merkleRoot: Field
-  ): boolean {
+  ): Bool {
     // NOTE: can probably remove this?
     if (merklePath.length === 0) {
-      return targetHash.equals(merkleRoot).toBoolean(); // no siblings, single item tree, so the hash should also be the root
+      return targetHash.equals(merkleRoot); // no siblings, single item tree, so the hash should also be the root
     }
 
     var proofHash: Field = targetHash;
@@ -182,17 +176,9 @@ export class MerkleTree {
         Poseidon.hash([proofHash, merklePath[x].hash]),
         proofHash
       );
-      // old code below
-      // if (merklePath[x].direction.equals(Field(0)).toBoolean()) {
-      //   proofHash = Poseidon.hash([merklePath[x].hash, proofHash]);
-      // } else if (merklePath[x].direction.equals(Field(1)).toBoolean()) {
-      //   proofHash = Poseidon.hash([proofHash, merklePath[x].hash]);
-      // } else {
-      //   return false;
-      // }
     }
 
-    return proofHash.equals(merkleRoot).toBoolean();
+    return proofHash.equals(merkleRoot);
   }
 
   /**
@@ -216,7 +202,7 @@ export class MerkleTree {
   }
 
   /**
-   * Prints each levels of the tree
+   * FOR DEBBUGING: Prints each levels of the tree
    */
   printTree() {
     console.log('printing tree');

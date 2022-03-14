@@ -1,22 +1,28 @@
 import { Bool, CircuitValue, Field, Optional, Poseidon } from 'snarkyjs';
-import { MerkleTree } from '../merkle_proof/MerkleTree';
+import { MerkleTree } from '../merkle_proof/merkle_tree';
 
-export class DataStack<V extends CircuitValue> {
+export class MerkleStack<V extends CircuitValue> {
   dataStore: Array<V>;
   merkleTree: MerkleTree;
+  defaultValue: V;
 
-  constructor() {
+  constructor(defaultValue: V) {
     this.dataStore = new Array<V>();
     this.merkleTree = new MerkleTree();
+    this.defaultValue = defaultValue;
   }
 
-  pop(): V | undefined {
+  pop(): Optional<V> {
     let leaves = this.merkleTree.tree.leaves;
     let poppedElement = this.dataStore.pop();
     leaves.pop();
     this.merkleTree.clear();
     this.merkleTree.addLeaves(leaves, false);
-    return poppedElement;
+
+    return new Optional(
+      new Bool(poppedElement !== undefined),
+      poppedElement || this.defaultValue
+    );
   }
 
   push(value: V): number {
@@ -29,17 +35,11 @@ export class DataStack<V extends CircuitValue> {
     return this.dataStore.length;
   }
 
-  // get(index: number): V | undefined {
-  //   return this.dataStore[index];
-  // }
-
-  get(index: number): Optional<V | undefined> {
-    let val = this.dataStore[index]
-    if(val) {
-      return new Optional(new Bool(true), val)
-    } else {
-      return new Optional(new Bool(false), val)
-    }
+  get(index: number): Optional<V> {
+    return new Optional(
+      new Bool(this.dataStore[index] !== undefined),
+      this.dataStore[index] || this.defaultValue
+    );
   }
 
   // shift() {}
@@ -52,11 +52,14 @@ export class DataStack<V extends CircuitValue> {
     return this.dataStore.splice(start, deleteCount);
   }
 
-  // getMerkleRoot(): Field | undefined {
-  //   return this.merkleTree.getMerkleRoot();
+  // forEach(callback: (v: V, index: number, array: V[]) => void) {
+  //   this.dataStore.forEach(callback);
+
+  //   // TODO: update merkle tree just in case
   // }
 
   getMerkleRoot(): Field {
     return this.merkleTree.getMerkleRoot();
   }
 }
+

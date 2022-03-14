@@ -1,0 +1,13 @@
+{
+  "translation": {
+    "contextmenu": {
+      "cut": "剪切",
+      "copy": "复制",
+      "paste": "粘贴",
+      "selectall": "全部选中"
+    },
+    "navbar": {
+      "overview": "总览"
+    }
+  }
+}

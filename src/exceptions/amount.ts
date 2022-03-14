@@ -1,4 +1,4 @@
-import { ErrorCode } from '../utils/enums'
+import { ErrorCode } from '@/utils/enums'
 
 const I18N_PATH = `messages.codes.`
 

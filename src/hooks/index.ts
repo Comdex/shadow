@@ -1,5 +1,5 @@
-import React from 'react'
-import { useLocation } from 'react-router-dom'
+import React, {useState, useMemo, useCallback, useEffect } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
 import { MobXProviderContext } from 'mobx-react'
 import { StoreType } from '@/stores'
 
@@ -33,3 +33,9 @@ function useStores<T extends keyof StoreType>(storeName?: T) {
 }
 
 export { useStores }
+
+export const useGoBack = (history: ReturnType<typeof useHistory>) => {
+  return useCallback(() => {
+    history.goBack()
+  }, [history])
+}

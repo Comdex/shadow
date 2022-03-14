@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { Route } from 'react-router-dom'
-import { CustomRouter } from '../types/App'
+import { CustomRouter } from '@/types/App'
 
 export const useRoutes = (contents: CustomRouter.Route[]) =>
   useMemo(() => {

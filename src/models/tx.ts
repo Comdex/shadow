@@ -1,4 +1,4 @@
-import { CircuitValue, Encoding, Field, prop, UInt64, Group, Poseidon } from 'snarkyjs';
+import { CircuitValue, Encoding, Field, prop, UInt64, Group, Poseidon, arrayProp } from 'snarkyjs';
 import { fieldToHex } from '../snapp/util';
 import { CipherText } from './cipher_text';
 
@@ -9,7 +9,8 @@ export class TxReceiptSecret extends CircuitValue {
   @prop receiver: Field;
   @prop receiverType: Field;
   @prop amount: UInt64;
-  @prop memo: Field[];
+  @prop secret: Field; //random number
+  @prop memo: Field[]; // dynamic?
 
   constructor(
     sender: Field,
@@ -17,6 +18,7 @@ export class TxReceiptSecret extends CircuitValue {
     receiver: Field,
     receiverType: Field,
     amount: UInt64,
+    secret: Field,
     memo: Field[]
   ) {
     super();
@@ -25,17 +27,8 @@ export class TxReceiptSecret extends CircuitValue {
     this.receiver = receiver;
     this.receiverType = receiverType;
     this.amount = amount;
+    this.secret = secret;
     this.memo = memo;
-  }
-
-  toFields(): Field[] {
-    return [
-      this.sender,
-      this.senderType,
-      this.receiver,
-      this.receiverType,
-      this.amount.value
-    ].concat(this.memo);
   }
 
   toString(): string {
@@ -66,17 +59,6 @@ export class TxReciptPool extends CircuitValue {
 
   static get zero(): TxReciptPool {
     return new TxReciptPool([]);
-  }
-
-  toFields(): Field[] {
-    let fields: Field[] = [];
-    for (let i = 0; i < this.txs.length; i++) {
-      fields = fields
-        .concat([this.txs[i].publicKey.x, this.txs[i].publicKey.y])
-        .concat(this.txs[i].cipherText);
-    }
-
-    return fields;
   }
 
   hash(): Field {

@@ -17,25 +17,24 @@ import {
 } from 'snarkyjs';
 export { Shadow };
 
+const registerEvent: Field = new Field(9999);
+
 class Shadow extends SmartContract {
   @state(Field) accountsCommitment = State<Field>();
   @state(Field) pendingTxsCommitment = State<Field>();
-  @state(Field) finishedTxsCommitment = State<Field>();
-  @state(Field) nonceSetCommitment = State<Field>();
+  @state(Field) nullifierHashesCommitment = State<Field>();
 
   deploy(
     initialBalance: UInt64,
     accountsCommitment: Field,
     pendingTxsCommitment: Field,
-    finishedTxsCommitment: Field,
-    nonceSetCommitment: Field
+    nullifierHashesCommitment: Field
   ) {
     super.deploy();
     this.balance.addInPlace(initialBalance);
     this.accountsCommitment.set(accountsCommitment);
     this.pendingTxsCommitment.set(pendingTxsCommitment);
-    this.finishedTxsCommitment.set(finishedTxsCommitment);
-    this.nonceSetCommitment.set(nonceSetCommitment);
+    this.nullifierHashesCommitment.set(nullifierHashesCommitment);
   }
 
   @method async registered(name: Field[], accountDb: AccountDb): Promise<Bool> {
@@ -71,25 +70,26 @@ class Shadow extends SmartContract {
     //encrypt the prikey to save
     let encryptedAcPriKey = Encryption.encrypt(priKeyData, walletPubKey);
 
-    let accountSecret = new AccountSecret(name, UInt64.zero, Poseidon.hash(pwd));
+    let accountSecret = new AccountSecret(name, UInt64.zero, Poseidon.hash(pwd), Field.random());
     let encryptedAccountSecret = Encryption.encrypt(accountSecret.toFields(), acPubKey);
     let account = new Account(acPubKey, encryptedAcPriKey, encryptedAccountSecret);
 
     accountDb.set(Poseidon.hash(name).toString(), account);
     let accountsNewRoot = accountDb.getMerkleRoot();
     this.accountsCommitment.set(accountsNewRoot);
+
+    emitEvent(registerEvent, account.toFields());
   }
 
   @method async rollUp(
     name: Field[],
     acPriKey: PrivateKey,
     accountDb: AccountDb,
-    pendingTxDb: PendingTxDb,
-    finishedTxDb: FinishedTxDb
+    pendingTxDb: PendingTxDb
   ) {
     const accountsCommitment = await this.accountsCommitment.get();
     const pendingTxCommitment = await this.pendingTxsCommitment.get();
-    const finishedTxCommitment = await this.finishedTxsCommitment.get();
+
     let nameHash = Poseidon.hash(name).toString();
 
     let account = accountDb.get(nameHash);
@@ -105,6 +105,8 @@ class Shadow extends SmartContract {
       pendingTxPool.value.hash(),
       pendingTxCommitment
     );
+
+    for (let i = 0; i < pendingTxPool.value.txs.length; i++) {}
   }
 
   @method async deposit(
@@ -119,3 +121,5 @@ class Shadow extends SmartContract {
     isRegistered.assertEquals(false);
   }
 }
+
+function emitEvent(index: Field, desc: Field[]) {}

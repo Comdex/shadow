@@ -1,4 +1,5 @@
 import { MerkleTree } from '@/lib/merkle_proof/merkle_tree';
+import { decryptForTxSerect } from '@/lib/utils/encrypt';
 import { Account, AccountSecret } from '@/models/account';
 import { AccountDb, FinishedTxDb, PendingTxDb } from '@/models/store';
 import {
@@ -81,6 +82,7 @@ class Shadow extends SmartContract {
     emitEvent(registerEvent, account.toFields());
   }
 
+  //TODO
   @method async rollUp(
     name: Field[],
     acPriKey: PrivateKey,
@@ -106,7 +108,11 @@ class Shadow extends SmartContract {
       pendingTxCommitment
     );
 
-    for (let i = 0; i < pendingTxPool.value.txs.length; i++) {}
+    let amount = UInt64.zero;
+    for (let i = 0; i < pendingTxPool.value.txs.length; i++) {
+      let tx = decryptForTxSerect(pendingTxPool.value.txs[i], acPriKey);
+      amount = amount.add(tx.amount);
+    }
   }
 
   @method async deposit(

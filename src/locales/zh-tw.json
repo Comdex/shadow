@@ -1,0 +1,13 @@
+{
+  "translation": {
+    "contextmenu": {
+      "cut": "剪下",
+      "copy": "複製",
+      "paste": "貼上",
+      "selectall": "全選"
+    },
+    "navbar": {
+      "overview": "總覽"
+    }
+  }
+}

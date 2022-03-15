@@ -17,11 +17,12 @@
     "noEmit": true,
     "jsx": "react",
     "baseUrl": "./",
+    "noImplicitAny":false,
     "paths": {
       "@/*": ["./src/*"]
     },
     "typeRoots": ["./typings/", "./node_modules/@types/"]
   },
   "include": ["./src", "./typings", "./vite.config.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "./src/lib/**/*", "./src/snapp"]
 }

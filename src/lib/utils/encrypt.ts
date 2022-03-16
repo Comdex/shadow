@@ -1,5 +1,5 @@
-import { TxReceiptSecret } from "@/models/tx";
-import { Encryption, Field, Poseidon, PrivateKey, PublicKey } from "snarkyjs";
+import { TxReceiptSecret } from "../models/tx";
+import { AsFieldElements, Encryption, Field, Poseidon, PrivateKey, PublicKey } from "snarkyjs";
 import { CipherText } from "../../models/cipher_text";
 
 // export function encryptByPubKey(data: Field[], pubKey: PublicKey): Field[] {
@@ -10,9 +10,14 @@ import { CipherText } from "../../models/cipher_text";
 //     return data;
 // }
 
-export function decryptForTxSerect(cipherText: CipherText, priKey: PrivateKey): TxReceiptSecret {
+// export function decryptForTxSerect(cipherText: CipherText, priKey: PrivateKey): TxReceiptSecret {
+//     let decryptedFields = Encryption.decrypt(cipherText, priKey);
+//     return TxReceiptSecret.ofFields(decryptedFields);
+// }
+
+export function decryptToModel<T>(cipherText: CipherText, priKey: PrivateKey, eleType: AsFieldElements<T>): T {
     let decryptedFields = Encryption.decrypt(cipherText, priKey);
-    return TxReceiptSecret.ofFields(decryptedFields);
+    return eleType.ofFields(decryptedFields);
 }
 
 export function getPubKeyFromWallet(): PublicKey {

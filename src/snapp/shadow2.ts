@@ -1,7 +1,7 @@
 import { MerkleTree } from '../lib/merkle_proof/merkle_tree';
 import { decryptToModel } from '../lib/utils/encrypt';
 import { Account, AccountSecret } from '../models/account';
-import { AccountDb, FinishedTxDb, PendingTxDb } from '../models/store';
+import { AccountDb, FinishedTxDb, NullifierHashesDb, PendingTxDb } from '../models/store';
 import {
   Field,
   PrivateKey,
@@ -85,7 +85,7 @@ class Shadow extends SmartContract {
     emitEvent(registerEvent, account.toFields());
   }
 
-  @method async latestBalance(
+  @method async aggBalance(
     name: Field[],
     acPriKey: PrivateKey,
     accountDb: AccountDb,
@@ -129,7 +129,7 @@ class Shadow extends SmartContract {
   }
 
   //TODO
-  @method async rollUp(
+  @method async updateBalance(
     name: Field[],
     acPriKey: PrivateKey,
     accountDb: AccountDb,
@@ -181,10 +181,29 @@ class Shadow extends SmartContract {
     amount: UInt64,
     accountDb: AccountDb,
     pendingTxDb: PendingTxDb,
-    finishedTxDb: FinishedTxDb
+    nullifierHashesDb: NullifierHashesDb
   ) {
     const isRegistered = await this.registered(name, accountDb);
     isRegistered.assertEquals(false);
+
+    const accountsCommitment = await this.accountsCommitment.get();
+    const pendingTxCommitment = await this.pendingTxsCommitment.get();
+    const nullifierHashesCommitment = await this.nullifierHashesCommitment.get();
+    let nameHash = Poseidon.hash(name).toString();
+
+    let account: Optional<Account> = accountDb.get(nameHash);
+    MerkleTree.validateProof(
+      accountDb.getProof(account.value.hash()),
+      account.value.hash(),
+      accountsCommitment
+    ).assertEquals(true);
+
+    let pendingTxPool = pendingTxDb.get(nameHash);
+    MerkleTree.validateProof(
+      pendingTxDb.getProof(pendingTxPool.value.hash()),
+      pendingTxPool.value.hash(),
+      pendingTxCommitment
+    ).assertEquals(true);
   }
 }
 

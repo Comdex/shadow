@@ -1,33 +1,40 @@
 import { useStores } from '@/hooks'
-import { observer } from 'mobx-react'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import styles from './index.module.less'
+import logoImg from '@/assets/logo_shadow.jpg'
+import {renderRoutes} from 'react-router-config';
 
-interface IHomeProps {
-  title: string
-  backurl?: string
-}
 
-const Home: React.FC<any> = observer((props) => {
-  const { backurl, title } = props
-
-  const counterStore = useStores('counterStore')
-  const commonStore = useStores('commonStore')
-
+const Home: React.FC<any> = (props) => {
+  console.log(props);
   return (
-    <>
-      <div className={styles.title}>Welcome Home {title}</div>
-      <div className={styles.result}>current counter：{counterStore.counter}</div>
-      <div className={styles.result}>current theme：{commonStore.theme}</div>
-      <p className={styles.row}>
-        <Link to="/h5/">H5 模块</Link>
-      </p>
-      <p className={styles.row}>
-        <Link to="/hybird/">hybird 模块</Link>
-      </p>
-    </>
+    <div className={styles.homeContainer}>
+      <div className={styles.headerContainer}>
+          <img src={logoImg} id="logoImg" />
+          <div className={styles.headerRightDiv}>
+            <div>
+              <span>You shielded balance</span><br/>
+              <span style={{'fontSize':'1.3rem', 'fontWeight':'600'}}>0 MINA</span>
+            </div>
+            <button className={styles.logInBtn}>Log in</button>
+          </div>
+      </div>
+      <div className={styles.mainContainer}>
+          <div className={[styles.center, styles.navContainer].join(" ")}>
+            <ul>
+              <li className={styles.nav}><NavLink exact to="/deposit" activeClassName={styles.selected}>Deposit</NavLink></li>
+              <li className={styles.nav}><NavLink exact to="/transfer" activeClassName={styles.selected}>Transfer</NavLink></li>
+              <li className={styles.nav}><NavLink exact to="/withdraw" activeClassName={styles.selected}>Withdraw</NavLink></li>
+            </ul>
+          </div>
+          <div className={styles.center}>
+              {renderRoutes(props.route.routes)}
+          </div>
+      </div>
+      <div className={[styles.center, styles.footContainer].join(" ")}>Foot</div>
+    </div>
   )
-})
+}
 
 export default Home

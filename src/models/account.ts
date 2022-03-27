@@ -1,21 +1,19 @@
 import { CircuitValue, Field, prop, PublicKey, UInt64, Encoding, Group, Poseidon } from 'snarkyjs';
-import { fieldToHex } from '../snapp/util';
+import { fieldToHex } from '../lib/utils/encode';
 import { CipherText } from './cipher_text';
 
 export class AccountSecret extends CircuitValue {
   @prop name: Field[];
   @prop balance: UInt64;
   @prop pwdHash: Field;
+  @prop secret: Field; //random number
 
-  constructor(name: Field[], balance: UInt64, pwdHash: Field) {
+  constructor(name: Field[], balance: UInt64, pwdHash: Field, secret: Field) {
     super();
     this.name = name;
     this.balance = balance;
     this.pwdHash = pwdHash;
-  }
-
-  toFields(): Field[] {
-    return [this.balance.value, this.pwdHash].concat(this.name);
+    this.secret = secret;
   }
 
   toString(): string {
@@ -40,13 +38,6 @@ export class Account extends CircuitValue {
     this.pubKey = pubKey;
     this.encryptedPriKey = priKey;
     this.accountSecret = accountSecret;
-  }
-
-  toFields(): Field[] {
-    return this.pubKey
-      .toFields()
-      .concat(this.encryptedPriKey.cipherText)
-      .concat(this.accountSecret.cipherText);
   }
 
   hash(): Field {

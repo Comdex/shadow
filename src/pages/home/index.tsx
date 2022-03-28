@@ -4,20 +4,19 @@ import { Link, NavLink } from 'react-router-dom'
 import styles from './index.module.less'
 import logoImg from '@/assets/logo_shadow.jpg'
 import {renderRoutes} from 'react-router-config';
-
+import {ConnectApp} from '@/components/ConnectApp';
 
 const Home: React.FC<any> = (props) => {
-  console.log(props);
   return (
     <div className={styles.homeContainer}>
       <div className={styles.headerContainer}>
-          <img src={logoImg} id="logoImg" />
+          <img src={logoImg} />
           <div className={styles.headerRightDiv}>
             <div>
               <span>You shielded balance</span><br/>
               <span style={{'fontSize':'1.3rem', 'fontWeight':'600'}}>0 MINA</span>
             </div>
-            <button className={styles.logInBtn}>Log in</button>
+            <ConnectApp />
           </div>
       </div>
       <div className={styles.mainContainer}>

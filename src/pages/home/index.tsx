@@ -6,6 +6,7 @@ import logoImg from '@/assets/logo_shadow.jpg'
 import {renderRoutes} from 'react-router-config';
 import {ConnectApp} from '@/components/ConnectApp';
 import {WalletPluginPanel} from '@/components/WalletPluginPanel';
+import { Footer } from '@/components/Footer'
 
 const Home: React.FC<any> = (props) => {
   return (
@@ -33,7 +34,7 @@ const Home: React.FC<any> = (props) => {
               {renderRoutes(props.route.routes)}
           </div>
       </div>
-      <div className={[styles.center, styles.footContainer].join(" ")}>Foot</div>
+      <div className={[styles.center, styles.footContainer].join(" ")}><Footer /></div>
     </div>
   )
 }

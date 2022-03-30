@@ -5,6 +5,7 @@ import styles from './index.module.less'
 import logoImg from '@/assets/logo_shadow.jpg'
 import {renderRoutes} from 'react-router-config';
 import {ConnectApp} from '@/components/ConnectApp';
+import {WalletPluginPanel} from '@/components/WalletPluginPanel';
 
 const Home: React.FC<any> = (props) => {
   return (
@@ -17,6 +18,7 @@ const Home: React.FC<any> = (props) => {
               <span style={{'fontSize':'1.3rem', 'fontWeight':'600'}}>0 MINA</span>
             </div>
             <ConnectApp />
+            <WalletPluginPanel />
           </div>
       </div>
       <div className={styles.mainContainer}>

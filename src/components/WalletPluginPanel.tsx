@@ -18,7 +18,7 @@ const AntModalWrapper = styled.div`
   }
 `
 export const WalletPluginPanel = () => {
-  const [visible, setVisible] = React.useState(true);
+  const [visible, setVisible] = React.useState(false);
 
   const encryptData = () => {
     // to get pub key & priv key

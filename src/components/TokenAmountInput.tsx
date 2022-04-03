@@ -10,7 +10,7 @@ export const TokenAmountInput = () => {
   }
 
   return <>
-              <div style={{display:'flex',justifyContent:'space-around'}}>
+              <div style={{display:'flex',justifyContent:'space-between'}}>
                 <div>token amount</div>
                 <div>balance:0.2 Mina <span style={{'color':'green'}}>Max</span></div>
               </div>

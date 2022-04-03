@@ -3,9 +3,10 @@ import { Modal, Button, Input, Typography } from 'antd';
 import styles from './index.module.less'
 import styled from 'styled-components'
 
-const btnStyles = {'backgroundColor':'transparent'}
+const btnStyles = {'backgroundColor':'transparent', 'width':'5rem'}
 const divStyles = `{
   'diplay':'flex',
+  'align-content':'space-between',
   'justify-content':'space-between'
 }`
 

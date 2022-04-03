@@ -4,7 +4,7 @@ import styles from './index.module.less'
 import styled from 'styled-components'
 import {AmountSuggestPanel} from '@/components/AmountSuggestPanel';
 import { TokenAmountInput } from '@/components/TokenAmountInput';
-import {WithdrawFeePanel} from '@/components/WithdrawFeePanel';
+import {OpFeePanel} from '@/components/OpFeePanel';
 
 export const Transfer = () => {
   const [visible, setVisible] = React.useState(true);
@@ -25,7 +25,7 @@ export const Transfer = () => {
               <span>Your passcode</span><br/>
               <Input placeholder="your passcode" />
             </div>
-            <div><WithdrawFeePanel /></div>
+            <div><OpFeePanel /></div>
             <div>
               <Button className={styles.encryptBtn}> Connect Wallet </Button>
             </div>

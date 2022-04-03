@@ -25,9 +25,9 @@ const Home: React.FC<any> = (props) => {
       <div className={styles.mainContainer}>
           <div className={[styles.center, styles.navContainer].join(" ")}>
             <ul>
-              <li className={styles.nav}><NavLink exact to="/deposit" activeClassName={styles.selected}>Deposit</NavLink></li>
-              <li className={styles.nav}><NavLink exact to="/transfer" activeClassName={styles.selected}>Transfer</NavLink></li>
-              <li className={styles.nav}><NavLink exact to="/withdraw" activeClassName={styles.selected}>Withdraw</NavLink></li>
+              <li><NavLink exact to="/deposit" activeClassName={styles.selected}>Deposit</NavLink></li>
+              <li><NavLink exact to="/transfer" activeClassName={styles.selected}>Transfer</NavLink></li>
+              <li><NavLink exact to="/withdraw" activeClassName={styles.selected}>Withdraw</NavLink></li>
             </ul>
           </div>
           <div className={styles.center}>

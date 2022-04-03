@@ -1,23 +1,5 @@
 @import 'antd/dist/antd.less';
 
-.title {
-  font-size: 36px;
-  font-weight: bold;
-  text-align: center;
-  margin: 20px;
-}
-
-.row {
-  padding: 10px 0;
-  font-size: 24px;
-}
-
-.result {
-  font-size: 24px;
-  color: rgb(10, 10, 10);
-  padding: 10px;
-}
-
 .center {
   display: flex;
   justify-content: center;
@@ -25,7 +7,8 @@
 }
 
 .selected {
-  background-color: rgb(255, 200, 14);
+  color: black;
+  font-weight: 600;
 }
 
 ul {
@@ -33,7 +16,6 @@ ul {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #333;
 }
 
 li {
@@ -42,14 +24,10 @@ li {
 
 li a {
   display: inline-block;
-  color: white;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
-}
-
-li a:hover {
-  background-color: #111;
+  color: gray;
 }
 
 .homeContainer {
@@ -57,6 +35,7 @@ li a:hover {
   grid-template-columns: [a1] 1fr [a2];
   grid-template-rows: [c1] 1fr [c2] auto [c3] 1fr [c4];
   row-gap: 2rem;
+  background-color: #FFFF99;
 }
 
 .headerContainer {
@@ -75,31 +54,16 @@ li a:hover {
   padding: 0.2em;
 }
 
-.logInBtn {
-  float: right;
-  color: rgb(10, 10, 10);
-  background-color: #4CAF50;
-  border: 2px solid #4CAF50;
-  border-radius: 5px;
-  padding: 5%;
-  text-align: center;
-  transition-duration: 0.4s;
-  cursor: pointer;
-  width:10em;
-}
-
-.logInBtn:hover {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
 .mainContainer {
   justify-self: center;
+  background-color: #FFFFCC;
 }
 
 .footContainer {
 }
 
 .navContainer {
-  background-color: #b2b2b2;
-  width: fit-content;
+  border-bottom-style: solid;
+  border-bottom-width: 0.2rem;
+  border-bottom-color: rgb(248, 248, 7);
 }

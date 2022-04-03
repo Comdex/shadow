@@ -11,6 +11,9 @@ export const Transfer = () => {
 
   return (
           <div className={styles.depositContainer}>
+            <div style={{'visibility':'hidden', 'height':'0'}}>
+              <AmountSuggestPanel />
+            </div>
             <div>
               <TokenAmountInput />
             </div>

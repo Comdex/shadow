@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import {AmountSuggestPanel} from '@/components/AmountSuggestPanel';
 import { TokenAmountInput } from '@/components/TokenAmountInput';
 import {OpFeePanel} from '@/components/OpFeePanel';
+import { WalletTrigger } from './WalletTrigger';
 
 export const Withdraw = () => {
   const [visible, setVisible] = React.useState(true);
@@ -27,7 +28,7 @@ export const Withdraw = () => {
             </div>
             <div><OpFeePanel /></div>
             <div>
-              <Button className={styles.encryptBtn}> Connect Wallet </Button>
+              <WalletTrigger />
             </div>
           </div>
   );

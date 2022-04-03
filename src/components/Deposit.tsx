@@ -4,6 +4,7 @@ import styles from './index.module.less'
 import styled from 'styled-components'
 import {AmountSuggestPanel} from '@/components/AmountSuggestPanel';
 import { TokenAmountInput } from './TokenAmountInput';
+import { WalletTrigger } from './WalletTrigger';
 
 export const Deposit = () => {
   const [visible, setVisible] = React.useState(true);
@@ -17,7 +18,7 @@ export const Deposit = () => {
               <TokenAmountInput />
             </div>
             <div>
-              <Button className={styles.encryptBtn}> Connect Wallet </Button>
+              <WalletTrigger />
             </div>
           </div>
   );

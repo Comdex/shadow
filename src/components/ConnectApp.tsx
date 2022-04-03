@@ -7,12 +7,10 @@ import Register from '@/components/Register'
 
 const AntModalWrapper = styled.div`
   .ant-modal-content {
-    border-radius: 20px;
-    border-color:rgb(255, 200, 90);
-    border-style:solid;
-    border-width:4px;
+    border-radius: 8px;
     width:25rem;
     padding:1.2rem;
+    background-color: #FFFFCC;
   }
 `
 export const ConnectApp = () => {
@@ -44,7 +42,7 @@ export const ConnectApp = () => {
             closable={true}
             visible={visible}
             onCancel={()=>{setVisible(false);}}
-            footer={[]}
+            footer={null}
           >
             <Login handleGoRegisterClick={handleGoRegisterClick} />
           </Modal>
@@ -62,7 +60,7 @@ export const ConnectApp = () => {
           closable={true}
           visible={visible}
           onCancel={()=>{setVisible(false);}}
-          footer={[]}
+          footer={null}
         >
           <Register handleGoBackClick={handleGoBackClick} />
         </Modal>

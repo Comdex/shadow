@@ -1,7 +1,3 @@
-import { MerkleTree } from '../lib/merkle_proof/merkle_tree';
-import { decryptToModel } from '../lib/utils/encrypt';
-import { Account, AccountSecret } from '../models/account';
-import { AccountDb, NullifierHashesDb, PendingTxDb } from '../models/store';
 import {
   Field,
   PrivateKey,
@@ -15,48 +11,103 @@ import {
   Bool,
   Circuit,
   Encryption,
-  Optional
+  Optional,
+  Permissions,
+  Perm,
+  Party,
+  UInt32
 } from 'snarkyjs';
-import { TxReceiptSecret } from '../models/tx';
-import { encrypt } from 'snarkyjs/dist/server/lib/encryption';
+import { Account, AccountSecret } from '../models/account';
 import { AccountCipherText, PrivateKeyCipherText } from '../models/cipher_text';
-export { Shadow };
+import { MerkleTree } from '../lib/merkle_proof/merkle_tree';
+
+export { ShadowZkapp };
 
 const registerEvent: Field = new Field(9999);
 
-class Shadow extends SmartContract {
+class ShadowZkapp extends SmartContract {
   @state(Field) accountsCommitment = State<Field>();
-  @state(Field) pendingTxsCommitment = State<Field>();
-  @state(Field) nullifierHashesCommitment = State<Field>();
+  @state(Field) pendingRcTxRootsCommitment = State<Field>();
 
-  deploy(
-    initialBalance: UInt64,
-    accountsCommitment: Field,
-    pendingTxsCommitment: Field,
-    nullifierHashesCommitment: Field
-  ) {
+  deploy(initialBalance: UInt64, accountsCommitment: Field, pendingRcTxRootsCommitment: Field) {
     super.deploy();
-    this.balance.addInPlace(initialBalance);
+    this.self.balance.addInPlace(initialBalance);
     this.accountsCommitment.set(accountsCommitment);
-    this.pendingTxsCommitment.set(pendingTxsCommitment);
-    this.nullifierHashesCommitment.set(nullifierHashesCommitment);
+    this.pendingRcTxRootsCommitment.set(pendingRcTxRootsCommitment);
+
+    let perms = Permissions.default();
+    perms.receive = Perm.proof();
+    perms.editState = Perm.proof();
+    this.self.update.permissions.setValue(perms);
   }
 
-  @method async registered(name: Field[], accountDb: AccountDb): Promise<Bool> {
+  @method async register(name: Field[], newAccount: AccountSecret, walletPubKey: PublicKey) {
+    newAccount.balance.assertEquals(UInt64.zero);
+    newAccount.pwdHash.equals(Field.zero).assertEquals(false);
+
+    //generate shield keypair
+    const shieldPriKey = PrivateKey.random();
+    const shieldPubKey = shieldPriKey.toPublicKey();
+
+    let shieldPriKeyData: Field[] = shieldPriKey.toFields();
+    //encrypt the prikey to save
+    let encryptedShieldPriKeyObj = Encryption.encrypt(shieldPriKeyData, walletPubKey);
+    let encryptedShieldPriKey = new PrivateKeyCipherText(
+      encryptedShieldPriKeyObj.publicKey,
+      encryptedShieldPriKeyObj.cipherText
+    );
+
+    let encryptedAccountSecretObj = Encryption.encrypt(newAccount.toFields(), shieldPubKey);
+    let encryptedAccountSecret = new AccountCipherText(
+      encryptedAccountSecretObj.publicKey,
+      encryptedAccountSecretObj.cipherText
+    );
+    let nameHash = Poseidon.hash(name);
+    let account = new Account(
+      nameHash,
+      UInt32.zero,
+      shieldPubKey,
+      encryptedShieldPriKey,
+      encryptedAccountSecret
+    );
+
+    this.emitEvent(account);
     const accountsCommitment = await this.accountsCommitment.get();
 
-    let nameHash = Poseidon.hash(name).toString();
-    let account = accountDb.get(nameHash);
-
-    return Circuit.if(
-      account.isSome,
-      MerkleTree.validateProof(
-        accountDb.getProof(account.value.hash()),
-        account.value.hash(),
-        accountsCommitment
-      ),
-      new Bool(false)
+    /*
+    //need to check name unique and save account, calculate new root
+    let newAccountsCommitment = MerkleStack.pushCommitment(
+      account, accountsCommitment
     );
+    this.accountsCommitment.set(newAccountsCommitment);
+    */
+  }
+
+  @method
+  async deposit(
+    depositor: Party<UInt32>,
+    depositAmount: UInt64,
+    account: Account,
+    merkleProof: any,
+    shieldPriKey: PrivateKey
+  ) {
+    const accountsCommitment = await this.accountsCommitment.get();
+
+    MerkleTree.validateProof(merkleProof, account.hash(), accountsCommitment).assertEquals(true);
+
+    let ac = account.getAccountSecret(shieldPriKey);
+    ac.balance = ac.balance.add(depositAmount);
+
+    let accountCipherText = ac.encrypt(account.shieldPubKey);
+    account.secret = accountCipherText;
+
+    this.balance.addInPlace(depositAmount);
+    depositor.balance.subInPlace(depositAmount);
+
+    // let newAccountsCommitment = MerkleStack.pushCommitment(
+    //   account, accountsCommitment
+    // );
+    // this.accountsCommitment.set(newAccountsCommitment);
   }
 
   @method async aggBalance(
@@ -95,7 +146,7 @@ class Shadow extends SmartContract {
     }
 
     let accountSecret = decryptToModel<AccountSecret>(
-      account.value.accountSecret,
+      account.value.secret,
       acPriKey,
       AccountSecret
     );
@@ -139,17 +190,17 @@ class Shadow extends SmartContract {
     }
 
     let accountSecret = decryptToModel<AccountSecret>(
-      account.value.accountSecret,
+      account.value.secret,
       acPriKey,
       AccountSecret
     );
     accountSecret.balance = accountSecret.balance.add(amount);
     let newAccountSecretText = encrypt(accountSecret.toFields(), account.value.pubKey);
-    account.value.accountSecret = newAccountSecretText;
+    account.value.secret = newAccountSecretText;
     accountDb.set(nameHash, account.value);
   }
 
-  @method async deposit(
+  @method async depositcc(
     name: Field[],
     acPriKey: PrivateKey,
     amount: UInt64,

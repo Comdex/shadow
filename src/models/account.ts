@@ -1,19 +1,37 @@
-import { CircuitValue, Field, prop, PublicKey, UInt64, Encoding, Group, Poseidon } from 'snarkyjs';
+import {
+  CircuitValue,
+  Field,
+  prop,
+  PublicKey,
+  UInt64,
+  Encoding,
+  Group,
+  Poseidon,
+  arrayProp,
+  UInt32,
+  PrivateKey,
+  Encryption
+} from 'snarkyjs';
 import { fieldToHex } from '../lib/utils/encode';
-import { CipherText } from './cipher_text';
+import { AccountCipherText, PrivateKeyCipherText } from './cipher_text';
 
 export class AccountSecret extends CircuitValue {
-  @prop name: Field[];
+  @arrayProp(Field, 1) name: Field[]; //max fields: 1
   @prop balance: UInt64;
   @prop pwdHash: Field;
-  @prop secret: Field; //random number
+  @prop blinding: Field; //random number
 
-  constructor(name: Field[], balance: UInt64, pwdHash: Field, secret: Field) {
+  constructor(name: Field[], balance: UInt64, pwdHash: Field, blinding: Field) {
     super();
     this.name = name;
     this.balance = balance;
     this.pwdHash = pwdHash;
-    this.secret = secret;
+    this.blinding = blinding;
+  }
+
+  encrypt(shieldPubKey: PublicKey): AccountCipherText {
+    let cipherText = Encryption.encrypt(this.toFields(), shieldPubKey);
+    return new AccountCipherText(cipherText.publicKey, cipherText.cipherText);
   }
 
   toString(): string {
@@ -29,15 +47,35 @@ export class AccountSecret extends CircuitValue {
 }
 
 export class Account extends CircuitValue {
-  @prop pubKey: PublicKey;
-  @prop encryptedPriKey: CipherText;
-  @prop accountSecret: CipherText;
+  @prop nameHash: Field;
+  @prop nonce: UInt32;
+  @prop shieldPubKey: PublicKey;
+  @prop encryptedShieldPriKey: PrivateKeyCipherText;
+  @prop secret: AccountCipherText;
 
-  constructor(pubKey: PublicKey, priKey: CipherText, accountSecret: CipherText) {
+  constructor(
+    nameHash: Field,
+    nonce: UInt32,
+    shieldPubKey: PublicKey,
+    encryptedShieldPriKey: PrivateKeyCipherText,
+    secret: AccountCipherText
+  ) {
     super();
-    this.pubKey = pubKey;
-    this.encryptedPriKey = priKey;
-    this.accountSecret = accountSecret;
+    this.nameHash = nameHash;
+    this.nonce = nonce;
+    this.shieldPubKey = shieldPubKey;
+    this.encryptedShieldPriKey = encryptedShieldPriKey;
+    this.secret = secret;
+  }
+
+  getAccountSecret(shieldPriKey: PrivateKey): AccountSecret {
+    let oriData = Encryption.decrypt(this.secret, shieldPriKey);
+    return AccountSecret.ofFields(oriData);
+  }
+
+  getShieldPriKey(walletPriKey: PrivateKey): PrivateKey {
+    let oriData = Encryption.decrypt(this.encryptedShieldPriKey, walletPriKey);
+    return PrivateKey.ofFields(oriData);
   }
 
   hash(): Field {
@@ -46,9 +84,14 @@ export class Account extends CircuitValue {
 
   static get zero(): Account {
     return new Account(
+      Field.zero,
+      UInt32.zero,
       PublicKey.ofFields(Array(255).fill(Field.zero)),
-      { publicKey: Group.ofFields(Array(255).fill(Field.zero)), cipherText: [] },
-      { publicKey: Group.ofFields(Array(255).fill(Field.zero)), cipherText: [] }
+      new PrivateKeyCipherText(
+        Group.ofFields(Array(255).fill(Field.zero)),
+        Array(257).fill(Field.zero)
+      ),
+      new AccountCipherText(Group.ofFields(Array(255).fill(Field.zero)), Array(6).fill(Field.zero))
     );
   }
 }

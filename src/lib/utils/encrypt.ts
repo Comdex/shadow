@@ -19,25 +19,3 @@ export function decryptToModel<T>(cipherText: CipherText, priKey: PrivateKey, el
     let decryptedFields = Encryption.decrypt(cipherText, priKey);
     return eleType.ofFields(decryptedFields);
 }
-
-export function getPubKeyFromWallet(): PublicKey {
-    return PrivateKey.random().toPublicKey();
-}
-
-export function getEncryptPriKeyFromWallet(): PrivateKey {
-    return PrivateKey.random();
-}
-
-export function hash(f: Field): Field {
-    let fs: Field[] = [];
-    fs.push(f);
-    return Poseidon.hash(fs);
-}
-
-export function encryptByPubKey(msg: Field[], pubKey: PublicKey): CipherText {
-    return new CipherText(pubKey.g, pubKey.g, msg);
-}
-
-export function decryptByPriKey({ c1, c2, m } : CipherText, priKey: PrivateKey): Field[] {
-    return m;
-}

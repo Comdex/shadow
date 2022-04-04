@@ -1,46 +1,72 @@
-import { CircuitValue, Encoding, Field, prop, UInt64, Group, Poseidon, arrayProp } from 'snarkyjs';
-import { fieldToHex } from '../snapp/util';
-import { CipherText } from './cipher_text';
+import {
+  CircuitValue,
+  Encoding,
+  Field,
+  prop,
+  UInt64,
+  Poseidon,
+  arrayProp,
+  UInt32,
+  PublicKey,
+  PrivateKey,
+  Encryption
+} from 'snarkyjs';
+import { TxCipherText } from './cipher_text';
 
-// senderType,receiverType: Field(0) for account name, Field(1) for wallet address
-export class TxReceiptSecret extends CircuitValue {
-  @prop sender: Field;
-  @prop senderType: Field;
-  @prop receiver: Field;
-  @prop receiverType: Field;
+export class ShieldTxReceiptSecret extends CircuitValue {
+  @arrayProp(Field, 1) sender: Field[]; //only internal account name
+  @arrayProp(Field, 1) internalReceiver: Field[];
+  @prop externalReceiver: PublicKey;
   @prop amount: UInt64;
-  @prop secret: Field; //random number
-  @prop memo: Field[]; // dynamic?
+  @prop blinding: Field; //random number
 
   constructor(
-    sender: Field,
-    senderType: Field,
-    receiver: Field,
-    receiverType: Field,
+    sender: Field[],
+    internalReceiver: Field[],
+    externalReceiver: PublicKey,
     amount: UInt64,
-    secret: Field,
-    memo: Field[]
+    blinding: Field
   ) {
     super();
     this.sender = sender;
-    this.senderType = senderType;
-    this.receiver = receiver;
-    this.receiverType = receiverType;
+    this.internalReceiver = internalReceiver;
+    this.externalReceiver = externalReceiver;
     this.amount = amount;
-    this.secret = secret;
-    this.memo = memo;
+    this.blinding = blinding;
+  }
+
+  static createInternalTxSecret(
+    sender: Field[],
+    internalReceiver: Field[],
+    amount: UInt64,
+    blinding: Field
+  ): ShieldTxReceiptSecret {
+    return new ShieldTxReceiptSecret(
+      sender,
+      internalReceiver,
+      PublicKey.ofFields(Array(255).fill(Field.zero)),
+      amount,
+      blinding
+    );
+  }
+
+  static createExternalTxSecret(
+    sender: Field[],
+    externalReceiver: PublicKey,
+    amount: UInt64,
+    blinding: Field
+  ): ShieldTxReceiptSecret {
+    return new ShieldTxReceiptSecret(sender, [Field.zero], externalReceiver, amount, blinding);
   }
 
   toString(): string {
     return (
       'sender: ' +
-      fieldToHex(this.sender) +
+      Encoding.Bijective.Fp.toString(this.sender) +
       ', receiver: ' +
-      fieldToHex(this.senderType) +
+      Encoding.Bijective.Fp.toString(this.internalReceiver) +
       ', amount: ' +
-      this.amount.toString() +
-      ', memo: ' +
-      Encoding.Bijective.Fp.toString(this.memo)
+      this.amount.toString()
     );
   }
 
@@ -49,19 +75,24 @@ export class TxReceiptSecret extends CircuitValue {
   }
 }
 
-export class TxReciptPool extends CircuitValue {
-  @prop txs: CipherText[];
+export class ShieldTxReceipt extends CircuitValue {
+  @prop nonce: UInt32;
+  @prop secret: TxCipherText;
+  @prop fee: UInt32; //charge fee
 
-  constructor(txs: CipherText[]) {
+  constructor(n: UInt32, s: TxCipherText, f: UInt32) {
     super();
-    this.txs = txs;
+    this.nonce = n;
+    this.secret = s;
+    this.fee = f;
   }
 
-  static get zero(): TxReciptPool {
-    return new TxReciptPool([]);
+  getShieldTxReceiptSecret(shieldPriKey: PrivateKey): ShieldTxReceiptSecret {
+    let oriData = Encryption.decrypt(this.secret, shieldPriKey);
+    return ShieldTxReceiptSecret.ofFields(oriData);
   }
 
-  hash(): Field {
+  hash() {
     return Poseidon.hash(this.toFields());
   }
 }

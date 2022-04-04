@@ -1,17 +1,19 @@
 import { KeyedMerkleStore } from '@/lib/data_store/keyed_data_store';
 import { Bool, CircuitValue, Field } from 'snarkyjs';
 import { Account } from './account';
-import { TxReciptPool } from './tx';
+import { ShieldTxReceipt, TxReciptPool } from './tx';
 
 export type AccountDb = KeyedMerkleStore<string, Account>;
-export type PendingTxDb = KeyedMerkleStore<string, TxReciptPool>;
 
-class WrapBool extends CircuitValue {
-  v: Bool;
+class WrapField extends CircuitValue {
+  v: Field;
 
-  constructor(v: Bool) {
+  constructor(v: Field) {
     super();
     this.v = v;
   }
 }
-export type NullifierHashesDb = KeyedMerkleStore<string, WrapBool>;
+export type PendingRcTxRootDb = KeyedMerkleStore<string, WrapField>;
+
+export type PendingRcTxDb = KeyedMerkleStore<string, ShieldTxReceipt>;
+export var userSubTreesMap = new Map<string, PendingRcTxDb>();

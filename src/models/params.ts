@@ -1,0 +1,1 @@
+import { CircuitValue } from 'snarkyjs';

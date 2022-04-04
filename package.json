@@ -5,21 +5,15 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build:dev": "tsc && vite build -m qa",
-    "serve": "vite preview"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "serve": "vite preview",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
-      "eslint --cache --fix",
-      "git add"
+      "eslint --cache --fix"
     ],
     "src/**/*.{js,jsx}": [
-      "eslint --cache --fix",
-      "git add"
+      "eslint --cache --fix"
     ]
   },
   "dependencies": {
@@ -65,9 +59,9 @@
     "eslint": "^7.22.0",
     "eslint-config-alloy": "^3.10.0",
     "eslint-plugin-react": "^7.22.0",
-    "husky": "^4.3.8",
+    "husky": "^7.0.4",
     "less": "^4.1.1",
-    "lint-staged": "^10.5.4",
+    "lint-staged": "^12.3.7",
     "postcss": "^8.2.8",
     "postcss-focus": "^5.0.1",
     "rollup-plugin-visualizer": "^5.3.6",

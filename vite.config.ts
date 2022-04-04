@@ -11,10 +11,6 @@ import { minifyHtml } from 'vite-plugin-html'
 const config: UserConfigExport = {
   plugins: [
     reactRefresh(),
-    legacy({
-      targets: ['Android >= 39', 'Chrome >= 39', 'Safari >= 10.1', 'iOS >= 10', '> 0.5%'],
-      polyfills: ['es.promise', 'regenerator-runtime']
-    }),
     vitePluginImp({
       libList: [
         {

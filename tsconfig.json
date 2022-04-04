@@ -8,7 +8,7 @@
     "skipLibCheck": false,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
+    // "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Node",
@@ -24,5 +24,5 @@
     "typeRoots": ["./typings/", "./node_modules/@types/"]
   },
   "include": ["./src", "./typings", "./vite.config.ts"],
-  "exclude": ["node_modules", "./src/lib/**/*", "./src/snapp"]
+  "exclude": ["./node_modules", "./src/lib","./src/models", "./src/snapp"]
 }

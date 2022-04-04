@@ -8,10 +8,10 @@ import routes from './routes'
 import stores from '@/stores'
 
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider stores={stores}>
       <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
-    </Provider>
-  </React.StrictMode>,
+    </Provider>,
+  // </React.StrictMode>
   document.getElementById('root')
 )

@@ -26,10 +26,10 @@
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@loadable/component": "^5.14.1",
-    "@material-ui/icons": "^4.11.2",
-    "@mui/icons-material": "^5.2.5",
-    "@mui/material": "^5.2.4",
     "@vitejs/plugin-legacy": "^1.3.2",
+    "ahooks": "^3.1.13",
+    "antd": "^4.19.4",
+    "axios": "^0.26.1",
     "classnames": "^2.2.6",
     "crypto": "^1.0.1",
     "i18next": "^21.6.6",
@@ -44,7 +44,8 @@
     "react-router": "^5.2.0",
     "react-router-config": "^5.1.1",
     "react-router-dom": "^5.2.0",
-    "snarkyjs": "0.2.2"
+    "snarkyjs": "0.2.2",
+    "styled-components": "^5.3.5"
   },
   "devDependencies": {
     "@types/babel__core": "^7.1.14",
@@ -70,7 +71,7 @@
     "postcss": "^8.2.8",
     "postcss-focus": "^5.0.1",
     "rollup-plugin-visualizer": "^5.3.6",
-    "typescript": "^4.2.3",
+    "typescript": "^4.6.3",
     "vite": "^2.1.5",
     "vite-plugin-html": "^2.0.3",
     "vite-plugin-imp": "^2.0.7"

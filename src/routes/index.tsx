@@ -1,6 +1,8 @@
 import loadable from '@loadable/component'
 import Layout, { H5Layout } from '@/layouts'
+import React from 'react'
 import { RouteConfig } from 'react-router-config'
+import { Redirect } from 'react-router-dom'
 import HomePage from '@/pages/HomePage'
 import {DepositPage} from '@/pages/DepositPage/DepositPage'
 import {TransferPage} from '@/pages/TransferPage/TransferPage'

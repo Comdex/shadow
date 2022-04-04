@@ -5,9 +5,9 @@ import styled from 'styled-components'
 import {AmountSuggestPanel} from '@/components/AmountSuggestPanel';
 import { TokenAmountInput } from '@/components/TokenAmountInput';
 import {OpFeePanel} from '@/components/OpFeePanel';
-import { WalletTrigger } from './WalletTrigger';
+import { WalletTrigger } from '@/components/WalletTrigger';
 
-export const Transfer = () => {
+export const TransferPage = () => {
   const [visible, setVisible] = React.useState(true);
 
   return (

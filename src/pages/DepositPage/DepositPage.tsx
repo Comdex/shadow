@@ -3,10 +3,10 @@ import { Modal, Button, Input, Typography } from 'antd';
 import styles from './index.module.less'
 import styled from 'styled-components'
 import {AmountSuggestPanel} from '@/components/AmountSuggestPanel';
-import { TokenAmountInput } from './TokenAmountInput';
-import { WalletTrigger } from './WalletTrigger';
+import { TokenAmountInput } from '@/components/TokenAmountInput';
+import { WalletTrigger } from '@/components/WalletTrigger';
 
-export const Deposit = () => {
+export const DepositPage = () => {
   const [visible, setVisible] = React.useState(true);
 
   return (

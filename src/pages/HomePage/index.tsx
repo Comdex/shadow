@@ -8,7 +8,7 @@ import {ConnectApp} from '@/components/ConnectApp';
 import {WalletPluginPanel} from '@/components/WalletPluginPanel';
 import { Footer } from '@/components/Footer'
 
-const Home: React.FC<any> = (props) => {
+const HomePage: React.FC<any> = (props) => {
   return (
     <div className={styles.homeContainer}>
       <div className={styles.headerContainer}>
@@ -39,4 +39,4 @@ const Home: React.FC<any> = (props) => {
   )
 }
 
-export default Home
+export default HomePage

@@ -1,31 +1,31 @@
 import loadable from '@loadable/component'
 import Layout, { H5Layout } from '@/layouts'
 import { RouteConfig } from 'react-router-config'
-import Home from '@/pages/home'
-import {Deposit} from '@/components/Deposit'
-import {Transfer} from '@/components/Transfer'
-import {Withdraw} from '@/components/Withdraw'
+import HomePage from '@/pages/HomePage'
+import {DepositPage} from '@/pages/DepositPage/DepositPage'
+import {TransferPage} from '@/pages/TransferPage/TransferPage'
+import {WithdrawPage} from '@/pages/WithdrawPage/WithdrawPage'
 
 const routesConfig: RouteConfig[] = [
   {
     path: '/',
     exact: false,
-    component: Home,
+    component: HomePage,
     routes: [
       {
         path: '/deposit',
         exact: true,
-        component: Deposit
+        component: DepositPage
       },
       {
         path: '/transfer',
         exact: true,
-        component: Transfer
+        component: TransferPage
       },
       {
         path: '/withdraw',
         exact: true,
-        component: Withdraw
+        component: WithdrawPage
       }
     ]
   }

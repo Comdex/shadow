@@ -5,8 +5,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build:dev": "tsc && vite build -m qa",
-    "serve": "vite preview",
-    "prepare": "husky install"
+    "serve": "vite preview"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
@@ -59,7 +58,6 @@
     "eslint": "^7.22.0",
     "eslint-config-alloy": "^3.10.0",
     "eslint-plugin-react": "^7.22.0",
-    "husky": "^7.0.4",
     "less": "^4.1.1",
     "lint-staged": "^12.3.7",
     "postcss": "^8.2.8",

@@ -174,6 +174,6 @@ export class TransferProof extends ProofWithInput<TransferArgs> {
     let ownTx = new ShieldTxReceipt(account.nonce, ownTxCipherText, fee);
     account.nonce = account.nonce.add(1);
 
-    account.secret = ac;
+    account.secret = ac.encrypt(account.shieldPubKey);
   }
 }

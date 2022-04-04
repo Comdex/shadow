@@ -7,7 +7,7 @@ import { TokenAmountInput } from '@/components/TokenAmountInput';
 import {OpFeePanel} from '@/components/OpFeePanel';
 import { WalletTrigger } from '@/components/WalletTrigger';
 
-export const WithdrawPage = () => {
+export const WithdrawPage: React.FC<any> = (props) => {
   const [visible, setVisible] = React.useState(true);
 
   return (

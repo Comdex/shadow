@@ -7,7 +7,7 @@ import { TokenAmountInput } from '@/components/TokenAmountInput';
 import {OpFeePanel} from '@/components/OpFeePanel';
 import { WalletTrigger } from '@/components/WalletTrigger';
 
-export const TransferPage = () => {
+export const TransferPage: React.FC<any> = (props) => {
   const [visible, setVisible] = React.useState(true);
 
   return (

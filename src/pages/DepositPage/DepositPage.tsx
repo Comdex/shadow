@@ -6,7 +6,7 @@ import {AmountSuggestPanel} from '@/components/AmountSuggestPanel';
 import { TokenAmountInput } from '@/components/TokenAmountInput';
 import { WalletTrigger } from '@/components/WalletTrigger';
 
-export const DepositPage = () => {
+export const DepositPage: React.FC<any> = (props) => {
   const [visible, setVisible] = React.useState(true);
 
   return (

@@ -99,7 +99,7 @@ export const ConnectApp = () => {
   }
 
   if (logout) {
-    return <LogoutBtn />;
+    return <LogoutBtn setVisible={setVisible} setLoginInit={setLoginInit} setGoRegister={setGoRegister} setRegisterInit={setRegisterInit} setRegisterInitData={setRegisterInitData} setLogout={setLogout} />;
   }
 
   return (
@@ -131,5 +131,13 @@ const LoginBtn = (props) => {
 }
 
 const LogoutBtn = (props) => {
-  return <Button className={styles.logInBtn} onClick={() => { }}> Log out </Button>
+  let { setVisible, setLoginInit, setGoRegister, setRegisterInit, setRegisterInitData, setLogout } = props;
+  return <Button className={styles.logInBtn} onClick={() => {
+    setLoginInit(false);
+    setGoRegister(false);
+    setRegisterInit(false);
+    setRegisterInitData(null);
+    setLogout(false);
+    setVisible(false);
+  }}> Log out </Button>
 }

@@ -6,13 +6,14 @@ import { AmountSuggest } from '@/components/AmountSuggest';
 import { TokenAmountInput } from '@/components/TokenAmountInput';
 import { WalletTrigger } from '@/components/WalletTrigger';
 import { TokenInputPanel } from '@/components/TokenInputPanel';
+import { BizEnums } from '@/common/enums/BizEnums';
 
 export const DepositPage: React.FC<any> = (props) => {
   const [visible, setVisible] = React.useState(true);
 
   return (
     <div className={styles.depositContainer}>
-      <TokenInputPanel tagName={'DepositPage'} />
+      <TokenInputPanel tagName={BizEnums.Deposit} />
       <div>
         <WalletTrigger />
       </div>

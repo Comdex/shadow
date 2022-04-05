@@ -8,8 +8,6 @@ import { WalletContext } from '@/context/WalletContext';
 export const TransferTokenAmountInput = (props) => {
   const [amountInput, setAmountInput] = React.useState(0);
   let sessionData = React.useContext(SessionContext);
-  let walletData = React.useContext(WalletContext);
-
   return <>
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <div>token amount</div>

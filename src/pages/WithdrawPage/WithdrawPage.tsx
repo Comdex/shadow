@@ -7,13 +7,14 @@ import { TokenAmountInput } from '@/components/TokenAmountInput';
 import { OpFeePanel } from '@/components/OpFeePanel';
 import { WalletTrigger } from '@/components/WalletTrigger';
 import { TokenInputPanel } from '@/components/TokenInputPanel';
+import { BizEnums } from '@/common/enums/BizEnums';
 
 export const WithdrawPage: React.FC<any> = (props) => {
   const [visible, setVisible] = React.useState(true);
 
   return (
     <div className={styles.depositContainer}>
-      <TokenInputPanel tagName={'WithdrawPage'} />
+      <TokenInputPanel tagName={BizEnums.Withdraw} />
       <div>
         <span>Recipient address</span><br />
         <Input placeholder="recipient address" />

@@ -80,9 +80,9 @@ const RegisterInit = (props) => {
 
               history.push("/deposit");
             }, 1000);
-          }, 2000);
+          }, 3000);
 
-        }, 1000);
+        }, 2000);
       };
       walletPluginPanelContext.setVisible(true);
     }

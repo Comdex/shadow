@@ -11,6 +11,8 @@ import { SessionContext } from '@/context/SessionContext';
 import { WalletContext } from '@/context/WalletContext';
 import { useHistory } from 'react-router';
 
+const { Title } = Typography;
+
 const AntModalWrapper = styled.div`
   .ant-modal-content {
     border-radius: 8px;
@@ -102,7 +104,10 @@ export const ConnectApp = (props) => {
   }
 
   if (logout) {
-    return <LogoutBtn setVisible={setVisible} setLoginInit={setLoginInit} setGoRegister={setGoRegister} setRegisterInit={setRegisterInit} setRegisterInitData={setRegisterInitData} setLogout={setLogout} />;
+    return <>
+      <LogoutBtn setVisible={setVisible} setLoginInit={setLoginInit} setGoRegister={setGoRegister} setRegisterInit={setRegisterInit} setRegisterInitData={setRegisterInitData} setLogout={setLogout} />;
+      <DepositInit />
+    </>
   }
 
   return (
@@ -151,4 +156,43 @@ const LogoutBtn = (props) => {
 
     history.push("/deposit");
   }}> Log out </Button>
+}
+
+export const WalletTriggerTempObj = {
+  setDepositInitVisable: (x: boolean): any => { }
+};
+
+const DepositInit = (props) => {
+  const [visible, setVisible] = React.useState(false);
+  WalletTriggerTempObj.setDepositInitVisable = setVisible;
+
+  return <div>
+    <AntModalWrapper>
+      <Modal
+        getContainer={false}
+        closable={false}
+        visible={visible}
+        onCancel={() => { setVisible(false); }}
+        footer={null}
+      >
+        <div>
+          <Title level={3}>Depositing...</Title>
+          <Title level={4}>process...</Title>
+          <div>
+            <h6>validating key proof...</h6>
+            <h6>encrypting new balance...</h6>
+            <h6>generating proof...</h6>
+            <h6>generating a transaction...</h6>
+          </div>
+          <div id={'waitingDepositTxConfirmation'} style={{ display: 'none' }}>
+            <h5>broadcast transaction to MINA mainnet...</h5>
+            <h6>waiting for transaction confirmations...</h6>
+          </div>
+          <div id={'depositTxConfirmed'} style={{ display: 'none' }}>
+            <h6>transaction confirmed...</h6>
+          </div>
+        </div >
+      </Modal>
+    </AntModalWrapper>
+  </div>
 }

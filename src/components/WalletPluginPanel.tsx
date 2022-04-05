@@ -18,6 +18,7 @@ const AntModalWrapper = styled.div`
     border-style:solid;
     border-width:2px;
     width:20rem;
+    z-index: 9999
   }
 `
 export const WalletPluginPanel = () => {
@@ -71,7 +72,7 @@ export const WalletPluginPanel = () => {
         visible={visible}
         onCancel={() => { setVisible(false); }}
         footer={null}
-        style={{ 'position': 'fixed', 'top': '0', 'right': '0' }}
+        style={{ 'position': 'fixed', 'top': '0', 'right': '0', 'zIndex': 9999 }}
       >
         <div className={styles.walletPluginPanel}>
           <div>

@@ -8,7 +8,9 @@ import { WalletContext } from '@/context/WalletContext';
 import styled from 'styled-components'
 import { useHistory } from 'react-router';
 import { useLocation } from 'react-router-dom'
+import { WalletTriggerTempObj } from './ConnectApp';
 
+const { Title } = Typography;
 const AntModalWrapper = styled.div`
   .ant-modal-content {
     border-radius: 8px;
@@ -18,10 +20,23 @@ const AntModalWrapper = styled.div`
   }
 `
 
+let setVisible0: any;
+
+const WalletTriggerModel = (props) => {
+  let { tagName, showable } = props;
+  switch (tagName) {
+    // case BizEnums.Deposit:
+    //   return <DepositInit />
+    case BizEnums.Transfer:
+      return <TransferInit />
+    default:
+      return <WithdrawInit />
+  }
+}
+
 const centerStyle = {
   'display': 'flex',
-  'justifyContent': 'center',
-  'alignItems': 'center'
+  'justifyContent': 'center'
 }
 
 export const WalletTrigger = (props) => {
@@ -47,41 +62,62 @@ export const WalletTrigger = (props) => {
       btnTxt = 'Deposit';
       callBackFunc = (amountToWallet) => {
         console.log('Deposit to trigger wallet and callback...');
-        console.log('sessionData.account.secret.balance before:' + sessionData.account.secret.balance);
-        if (amountToWallet > 0) {
-          sessionData.account.secret.balance += amountToWallet;
-        }
-        console.log('sessionData.account.secret.balance later:' + sessionData.account.secret.balance);
+        (document.querySelector("#waitingDepositTxConfirmation") as HTMLElement).style.display = 'block';
 
-        console.log("location:", location);
-        history.push(location.pathname);
+        setTimeout(() => {
+          (document.querySelector("#depositTxConfirmed") as HTMLElement).style.display = 'block';
+
+          console.log('sessionData.account.secret.balance before:' + sessionData.account.secret.balance);
+          if (amountToWallet > 0) {
+            sessionData.account.secret.balance += amountToWallet;
+          }
+          console.log('sessionData.account.secret.balance later:' + sessionData.account.secret.balance);
+
+          setTimeout(() => {
+            WalletTriggerTempObj.setDepositInitVisable(false);
+            console.log("location:", location);
+            history.push(location.pathname);
+          }, 1000);
+        }, 1500);
       };
       break;
     case BizEnums.Transfer:
       btnTxt = 'Transfer';
       callBackFunc = (amountToWallet) => {
-        console.log('Transfer to trigger wallet and callback...');
-        console.log('sessionData.account.secret.balance before:' + sessionData.account.secret.balance);
         if (sessionData.account.secret.balance >= amountToWallet && amountToWallet > 0) {
-          sessionData.account.secret.balance -= amountToWallet;
-        }
-        console.log('sessionData.account.secret.balance later:' + sessionData.account.secret.balance);
+          setVisible0(true);
+          setTimeout(() => {
+            console.log('sessionData.account.secret.balance before:' + sessionData.account.secret.balance);
+            sessionData.account.secret.balance -= amountToWallet;
+            console.log('sessionData.account.secret.balance later:' + sessionData.account.secret.balance);
 
-        console.log("location:", location);
-        history.push(location.pathname);
+            console.log("location:", location);
+            history.push(location.pathname);
+
+            setVisible0(false);
+          }, 2000);
+        }
+
       };
       break;
     default:
       btnTxt = 'Withdraw'
       callBackFunc = (amountToWallet) => {
-        console.log('Withdraw to trigger wallet and callback...');
         if (sessionData.account.secret.balance >= amountToWallet && amountToWallet > 0) {
-          sessionData.account.secret.balance -= amountToWallet;
-          walletData.balance += amountToWallet;
+          setVisible0(true);
+          setTimeout(() => {
+            console.log('sessionData.account.secret.balance before:' + sessionData.account.secret.balance);
+            sessionData.account.secret.balance -= amountToWallet;
+            walletData.balance += amountToWallet;
+            console.log('sessionData.account.secret.balance later:' + sessionData.account.secret.balance);
+
+            console.log("location:", location);
+            history.push(location.pathname);
+
+            setVisible0(false);
+          }, 2000);
         }
 
-        console.log("location:", location);
-        history.push(location.pathname);
       };
       break;
   }
@@ -105,9 +141,12 @@ export const WalletTrigger = (props) => {
               callBackFunc(Number.parseInt(xamountToWallet));
               break;
             default:
-              walletPluginPanelContext.currentCallBack = callBackFunc;
-              walletPluginPanelContext.amount = Number.parseInt(xamountToWallet);
-              walletPluginPanelContext.setVisible(true);
+              WalletTriggerTempObj.setDepositInitVisable(true);
+              setTimeout(() => {
+                walletPluginPanelContext.currentCallBack = callBackFunc;
+                walletPluginPanelContext.amount = Number.parseInt(xamountToWallet);
+                walletPluginPanelContext.setVisible(true);
+              }, 1000);
               break;
           }
 
@@ -116,6 +155,65 @@ export const WalletTrigger = (props) => {
       >
         {btnTxt}
       </Button>
+      <WalletTriggerModel tagName={tagName} showable={isDisabled} />
     </div >
   );
+}
+
+const TransferInit = (props) => {
+  const [visible, setVisible] = React.useState(false);
+  setVisible0 = setVisible;
+
+  return <AntModalWrapper>
+    <Modal
+      getContainer={false}
+      closable={false}
+      visible={visible}
+      onCancel={() => { setVisible(false); }}
+      footer={null}
+    >
+      <div>
+        <Title level={3}>Transfer...</Title>
+        <Title level={4}>process...</Title>
+        <div>
+          <h6>validating key proof...</h6>
+          <h6>encrypting new balance...</h6>
+          <h6>generating proof...</h6>
+          <h6>generating an internal transaction...</h6>
+        </div>
+        <div id={'waitingTransferTxConfirmation'} style={{ display: 'none' }}>
+          <h5>send to rollup server...</h5>
+        </div>
+      </div >
+    </Modal>
+  </AntModalWrapper>
+}
+
+const WithdrawInit = (props) => {
+  const [visible, setVisible] = React.useState(false);
+  setVisible0 = setVisible;
+
+  return <AntModalWrapper>
+    <Modal
+      getContainer={false}
+      closable={false}
+      visible={visible}
+      onCancel={() => { setVisible(false); }}
+      footer={null}
+    >
+      <div>
+        <Title level={3}>Transfer...</Title>
+        <Title level={4}>process...</Title>
+        <div>
+          <h6>validating key proof...</h6>
+          <h6>encrypting new balance...</h6>
+          <h6>generating proof...</h6>
+          <h6>generating an internal transaction...</h6>
+        </div>
+        <div id={'waitingWithdrawTxConfirmation'} style={{ display: 'none' }}>
+          <h5>send to rollup server...</h5>
+        </div>
+      </div >
+    </Modal>
+  </AntModalWrapper>
 }

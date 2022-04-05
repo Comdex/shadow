@@ -2,8 +2,9 @@ import * as React from 'react';
 import { Modal, Button, Input, Typography } from 'antd';
 import styles from './index.module.less'
 import styled from 'styled-components'
+import { WalletPluginPanelContext } from '@/context/PageContext'
 
-const {TextArea} = Input
+const { TextArea } = Input
 
 const AntModalWrapper = styled.div`
   .ant-modal-content {
@@ -19,6 +20,8 @@ const AntModalWrapper = styled.div`
 `
 export const WalletPluginPanel = () => {
   const [visible, setVisible] = React.useState(false);
+  let walletPluginPanelContext = React.useContext(WalletPluginPanelContext);
+  walletPluginPanelContext.setVisible = setVisible;
 
   const encryptData = () => {
     // to get pub key & priv key
@@ -34,30 +37,30 @@ export const WalletPluginPanel = () => {
   }
 
   return (
-      <AntModalWrapper>
-        <Modal
-          getContainer={false}
-          closable={true}
-          visible={visible}
-          onCancel={()=>{setVisible(false);}}
-          footer={null}
-          style={{'position':'fixed', 'top':'0', 'right':'0'}}
-        >
-          <div className={styles.walletPluginPanel}>
-            <div>
-              <span>public key:</span>
-              <TextArea id='pubKey' rows={5} />
-            </div>
-            <div>
-              <span>private key:</span>
-              <TextArea id='privKey' rows={3} />
-            </div>
-            <div><Button className={styles.encryptBtn} onClick={encryptData}> encrypt </Button> <br/></div>
-            <div><Button className={styles.decryptBtn} onClick={decryptData}> decrypt </Button> <br/></div>
-            <div><Button className={styles.signBtn} onClick={signData}> sign </Button> <br/></div>
+    <AntModalWrapper>
+      <Modal
+        getContainer={false}
+        closable={true}
+        visible={visible}
+        onCancel={() => { setVisible(false); }}
+        footer={null}
+        style={{ 'position': 'fixed', 'top': '0', 'right': '0' }}
+      >
+        <div className={styles.walletPluginPanel}>
+          <div>
+            <span>public key:</span>
+            <TextArea id='pubKey' rows={5} />
           </div>
-        </Modal>
-      </AntModalWrapper>
+          <div>
+            <span>private key:</span>
+            <TextArea id='privKey' rows={3} />
+          </div>
+          <div><Button className={styles.encryptBtn} onClick={encryptData}> encrypt </Button> <br /></div>
+          <div><Button className={styles.decryptBtn} onClick={decryptData}> decrypt </Button> <br /></div>
+          <div><Button className={styles.signBtn} onClick={signData}> sign </Button> <br /></div>
+        </div>
+      </Modal>
+    </AntModalWrapper>
   );
 }
 

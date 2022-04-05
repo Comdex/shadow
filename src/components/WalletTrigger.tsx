@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { Modal, Button, Input, Typography } from 'antd';
 import styles from './index.module.less'
+import { WalletPluginPanelContext } from '@/context/PageContext'
 
 const centerStyle = {
   'display': 'flex',
-  'justify-content': 'center',
-  'align-items': 'center'
+  'justifyContent': 'center',
+  'alignItems': 'center'
 }
 
 export const WalletTrigger = () => {
+  let walletPluginPanelContext = React.useContext(WalletPluginPanelContext);
   return (
     <div style={centerStyle}>
-      <Button className={styles.encryptBtn}> Connect Wallet </Button>
-    </div>
+      <Button className={styles.encryptBtn} onClick={() => { walletPluginPanelContext.setVisible(true); }}> Connect Wallet </Button>
+    </div >
   );
 }

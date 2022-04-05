@@ -4,9 +4,14 @@ import styles from './index.module.less'
 import styled from 'styled-components'
 import { SessionContext } from '@/context/SessionContext';
 import { WalletContext } from '@/context/WalletContext';
+import { useHistory, useLocation } from 'react-router';
 
 export const TransferTokenAmountInput = (props) => {
-  const [amountInput, setAmountInput] = React.useState(0);
+  let { amountInput } = props;
+
+  let history = useHistory();
+  let location = useLocation();
+  console.log('TransferTokenAmountInput.location=', location);
   let sessionData = React.useContext(SessionContext);
   return <>
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -15,11 +20,22 @@ export const TransferTokenAmountInput = (props) => {
         <span style={{ 'fontSize': '0.6rem', color: 'gray', fontWeight: '1500' }}>
           shielded balance:
           {sessionData.account ? sessionData.account.secret.balance : 0} Mina </span>
-        <span onClick={() => { console.log('set max AmountInput...'); setAmountInput(sessionData.account ? sessionData.account.secret.balance : 0) }} style={{ 'color': 'green' }}>Max</span>
+        <span onClick={() => {
+          console.log('set max AmountInput...');
+          history.push({
+            'pathname': location.pathname,
+            state: { 'amountInput': sessionData.account ? sessionData.account.secret.balance : 0 }
+          });
+        }} style={{ 'color': 'green' }}>Max</span>
       </div>
     </div>
     <div>
-      <Input placeholder="token amount" value={amountInput} id={'tokenAmountInput'} />
+      <Input placeholder="token amount" value={amountInput} onChange={e => {
+        history.push({
+          'pathname': location.pathname,
+          state: { 'amountInput': e.target.value }
+        });
+      }} />
     </div>
   </>
 }

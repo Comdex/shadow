@@ -8,9 +8,14 @@ import { OpFeePanel } from '@/components/OpFeePanel';
 import { WalletTrigger } from '@/components/WalletTrigger';
 import { TransferTokenAmountInput } from '@/components/TransferTokenAmountInput';
 import { BizEnums } from '@/common/enums/BizEnums';
+import { useHistory, useLocation } from 'react-router';
+
+let amountInput = 0;
 
 export const TransferPage: React.FC<any> = (props) => {
-  const [visible, setVisible] = React.useState(true);
+  let location = useLocation();
+  console.log('TransferPage.location=', location);
+  let amountInput = location.state ? (location.state['amountInput'] ? location.state['amountInput'] : 0) : 0;
 
   return (
     <div className={styles.depositContainer}>
@@ -28,7 +33,7 @@ export const TransferPage: React.FC<any> = (props) => {
         <span>Your passcode</span><br />
         <Input placeholder="your passcode" />
       </div>
-      <div><OpFeePanel /></div>
+      <div><OpFeePanel amount={amountInput} /></div>
       <div>
         <WalletTrigger tagName={BizEnums.Transfer} />
       </div>

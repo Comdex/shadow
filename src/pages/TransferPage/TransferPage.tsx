@@ -24,12 +24,12 @@ export const TransferPage: React.FC<any> = (props) => {
         <TransferTokenAmountInput />
       </div>
       <div>
-        <span>Recipient address</span><br />
+        <span>Recipient name</span><br />
         <Input placeholder="recipient address" />
       </div>
       <div>
         <span>Your passcode</span><br />
-        <Input placeholder="your passcode" />
+        <Input.Password placeholder="your passcode" />
       </div>
       <div><OpFeePanel amount={amountInput} /></div>
       <div>

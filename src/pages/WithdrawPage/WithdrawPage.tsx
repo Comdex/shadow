@@ -27,7 +27,7 @@ export const WithdrawPage: React.FC<any> = (props) => {
       </div>
       <div>
         <span>Your passcode</span><br />
-        <Input placeholder="your passcode" />
+        <Input.Password placeholder="your passcode" />
       </div>
       <div><OpFeePanel amount={amountInput} /></div>
       <div>

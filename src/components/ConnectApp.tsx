@@ -182,14 +182,14 @@ const DepositInit = (props) => {
             <h6>validating key proof...</h6>
             <h6>encrypting new balance...</h6>
             <h6>generating proof...</h6>
-            <h6>generating a transaction...</h6>
+            <h6>generating an external transaction...</h6>
           </div>
           <div id={'waitingDepositTxConfirmation'} style={{ display: 'none' }}>
-            <h5>broadcast transaction to MINA mainnet...</h5>
+            <h5 style={{ 'color': 'green' }}>broadcast transaction to MINA mainnet...</h5>
             <h6>waiting for transaction confirmations...</h6>
           </div>
           <div id={'depositTxConfirmed'} style={{ display: 'none' }}>
-            <h6>transaction confirmed...</h6>
+            <h5 style={{ 'color': 'green' }}>transaction confirmed...</h5>
           </div>
         </div >
       </Modal>

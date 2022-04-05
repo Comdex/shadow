@@ -79,10 +79,10 @@ const RegisterInit = (props) => {
               setLogout(true);
 
               history.push("/deposit");
-            }, 1000);
-          }, 3000);
+            }, 3000);
+          }, 15000);
 
-        }, 2000);
+        }, 5000);
       };
       walletPluginPanelContext.setVisible(true);
     }
@@ -94,19 +94,19 @@ const RegisterInit = (props) => {
     <div>
       <h6>generating Keypairs...</h6>
       <h6>Initializing balance...</h6>
-      <h6>Initializing balance...</h6>
       <h6>Hashing passcode...</h6>
       <h6>encrypting private key, balance...</h6>
     </div>
     <div id={'proofCheckAndGenTx'} style={{ display: 'none' }}>
-      <h6>validating key proof...</h6>
-      <h6>generating a transaction......</h6>
+      <h5>validating key proof...</h5>
+      <h6>generating an external transaction......</h6>
     </div>
     <div id={'waitingTxConfirmation'} style={{ display: 'none' }}>
+      <h5 style={{ 'color': 'green' }}>broadcast transaction to MINA mainnet...</h5>
       <h6>waiting for transaction confirmations...</h6>
     </div>
     <div id={'txConfirmed'} style={{ display: 'none' }}>
-      <h6>transaction confirmed...</h6>
+      <h5 style={{ 'color': 'green' }}>transaction confirmed...</h5>
       <h6>initialize your personal page...</h6>
     </div>
   </div >

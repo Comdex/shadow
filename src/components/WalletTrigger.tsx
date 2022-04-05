@@ -77,8 +77,8 @@ export const WalletTrigger = (props) => {
             WalletTriggerTempObj.setDepositInitVisable(false);
             console.log("location:", location);
             history.push(location.pathname);
-          }, 1000);
-        }, 1500);
+          }, 8000);
+        }, 8000);
       };
       break;
     case BizEnums.Transfer:
@@ -86,16 +86,20 @@ export const WalletTrigger = (props) => {
       callBackFunc = (amountToWallet) => {
         if (sessionData.account.secret.balance >= amountToWallet && amountToWallet > 0) {
           setVisible0(true);
+
           setTimeout(() => {
             console.log('sessionData.account.secret.balance before:' + sessionData.account.secret.balance);
             sessionData.account.secret.balance -= amountToWallet;
             console.log('sessionData.account.secret.balance later:' + sessionData.account.secret.balance);
 
-            console.log("location:", location);
-            history.push(location.pathname);
+            (document.querySelector("#transferTxConfirmed") as HTMLElement).style.display = 'block';
+            setTimeout(() => {
+              console.log("location:", location);
+              history.push(location.pathname);
+              setVisible0(false);
+            }, 2000);
 
-            setVisible0(false);
-          }, 2000);
+          }, 3000);
         }
 
       };
@@ -105,17 +109,21 @@ export const WalletTrigger = (props) => {
       callBackFunc = (amountToWallet) => {
         if (sessionData.account.secret.balance >= amountToWallet && amountToWallet > 0) {
           setVisible0(true);
+
           setTimeout(() => {
             console.log('sessionData.account.secret.balance before:' + sessionData.account.secret.balance);
             sessionData.account.secret.balance -= amountToWallet;
             walletData.balance += amountToWallet;
             console.log('sessionData.account.secret.balance later:' + sessionData.account.secret.balance);
 
-            console.log("location:", location);
-            history.push(location.pathname);
+            (document.querySelector("#withdrawTxConfirmed") as HTMLElement).style.display = 'block';
 
-            setVisible0(false);
-          }, 2000);
+            setTimeout(() => {
+              console.log("location:", location);
+              history.push(location.pathname);
+              setVisible0(false);
+            }, 2000);
+          }, 3000);
         }
 
       };
@@ -179,14 +187,17 @@ const TransferInit = (props) => {
           <h6>validating key proof...</h6>
           <h6>encrypting new balance...</h6>
           <h6>generating proof...</h6>
-          <h6>generating an internal transaction...</h6>
+          <h6 style={{ 'color': 'green' }} > generating an internal transaction...</h6>
         </div>
         <div id={'waitingTransferTxConfirmation'} style={{ display: 'none' }}>
           <h5>send to rollup server...</h5>
         </div>
+        <div id={'transferTxConfirmed'} style={{ display: 'none' }}>
+          <h5 style={{ 'color': 'green' }}>transaction confirmed...</h5>
+        </div>
       </div >
     </Modal>
-  </AntModalWrapper>
+  </AntModalWrapper >
 }
 
 const WithdrawInit = (props) => {
@@ -208,10 +219,13 @@ const WithdrawInit = (props) => {
           <h6>validating key proof...</h6>
           <h6>encrypting new balance...</h6>
           <h6>generating proof...</h6>
-          <h6>generating an internal transaction...</h6>
+          <h6>generating a transaction...</h6>
         </div>
         <div id={'waitingWithdrawTxConfirmation'} style={{ display: 'none' }}>
           <h5>send to rollup server...</h5>
+        </div>
+        <div id={'withdrawTxConfirmed'} style={{ display: 'none' }}>
+          <h5 style={{ 'color': 'green' }}>transaction confirmed...</h5>
         </div>
       </div >
     </Modal>

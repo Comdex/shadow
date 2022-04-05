@@ -74,7 +74,7 @@ const RegisterInit = (props) => {
             setTimeout(() => {
               sessionData.account = account;
               walletData.balance = 10;
-              console.log('to setLogout...');
+              console.log('to show Logout Btn...');
               setRegisterInit(false);
               setLogout(true);
 

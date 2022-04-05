@@ -18,7 +18,7 @@ export const TransferTokenAmountInput = (props) => {
       <div>token amount</div>
       <div>
         <span style={{ 'fontSize': '0.6rem', color: 'gray', fontWeight: '1500' }}>
-          shielded balance:
+          shielded balance:&nbsp;&nbsp;
           {sessionData.account ? sessionData.account.secret.balance : 0} Mina </span>
         <span onClick={() => {
           console.log('set max AmountInput...');

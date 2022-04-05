@@ -30,7 +30,7 @@ export const TokenAmountInput = (props) => {
       <div>token amount</div>
       <div>
         <span style={{ 'fontSize': '0.6rem', color: 'gray', fontWeight: '1500' }}>
-          {labelPiece} balance:
+          {labelPiece} balance:&nbsp;&nbsp;
           {balanceAmount} Mina </span>
         <span onClick={() => {
           console.log('set max AmountInput...');

@@ -25,7 +25,7 @@ export const WithdrawPage: React.FC<any> = (props) => {
       </div>
       <div><OpFeePanel /></div>
       <div>
-        <WalletTrigger />
+        <WalletTrigger tagName={BizEnums.Withdraw} />
       </div>
     </div>
   );

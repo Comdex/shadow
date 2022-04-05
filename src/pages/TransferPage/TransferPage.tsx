@@ -7,6 +7,7 @@ import { TokenAmountInput } from '@/components/TokenAmountInput';
 import { OpFeePanel } from '@/components/OpFeePanel';
 import { WalletTrigger } from '@/components/WalletTrigger';
 import { TransferTokenAmountInput } from '@/components/TransferTokenAmountInput';
+import { BizEnums } from '@/common/enums/BizEnums';
 
 export const TransferPage: React.FC<any> = (props) => {
   const [visible, setVisible] = React.useState(true);
@@ -29,7 +30,7 @@ export const TransferPage: React.FC<any> = (props) => {
       </div>
       <div><OpFeePanel /></div>
       <div>
-        <WalletTrigger />
+        <WalletTrigger tagName={BizEnums.Transfer} />
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ export const DepositPage: React.FC<any> = (props) => {
     <div className={styles.depositContainer}>
       <TokenInputPanel tagName={BizEnums.Deposit} />
       <div>
-        <WalletTrigger />
+        <WalletTrigger tagName={BizEnums.Deposit} />
       </div>
     </div>
   );

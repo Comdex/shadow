@@ -7,6 +7,7 @@ import Register from '@/components/Register'
 import { LoginInit } from './LoginInit';
 import RegisterInit from './RegisterInit';
 import { Account, AccountSecret } from '@/common/models/account2';
+import { SessionContext } from '@/context/SessionContext';
 
 const AntModalWrapper = styled.div`
   .ant-modal-content {
@@ -132,7 +133,10 @@ const LoginBtn = (props) => {
 
 const LogoutBtn = (props) => {
   let { setVisible, setLoginInit, setGoRegister, setRegisterInit, setRegisterInitData, setLogout } = props;
+  let sessionData = React.useContext(SessionContext);
+
   return <Button className={styles.logInBtn} onClick={() => {
+    sessionData.account = null;
     setLoginInit(false);
     setGoRegister(false);
     setRegisterInit(false);

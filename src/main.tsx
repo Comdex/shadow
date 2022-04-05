@@ -5,13 +5,13 @@ import '@/styles/global.less'
 import { renderRoutes } from 'react-router-config'
 import routes from './routes'
 import { WalletPluginPanelContext } from './context/PageContext'
-import { SessionContext } from "./context/SessionContext"
+import { SessionContext, SessionData } from "./context/SessionContext"
 import { WalletPluginPanelBtnEnums } from './common/enums/WalletPluginPanelBtnEnums'
 
 ReactDOM.render(
   // <React.StrictMode>
   <WalletPluginPanelContext.Provider value={{ setVisible: () => { console.log('default WalletPluginPanelContext'); }, targetBtn: WalletPluginPanelBtnEnums.Sign, currentCallBack: () => { console.log('default currentCallBack'); } }}>
-    <SessionContext.Provider value={{}}>
+    <SessionContext.Provider value={new SessionData()}>
       <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
     </SessionContext.Provider>
   </WalletPluginPanelContext.Provider>

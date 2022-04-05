@@ -4,6 +4,7 @@ import BasicUtils from "@/common/BasicUtils";
 import { AccountSecret, Account } from "@/common/models/account2";
 import { WalletPluginPanelContext } from '@/context/PageContext';
 import { WalletPluginPanelBtnEnums } from '@/common/enums/WalletPluginPanelBtnEnums';
+import { SessionContext } from '@/context/SessionContext';
 
 const { Title } = Typography;
 
@@ -16,6 +17,7 @@ interface RegisterProof {
 const RegisterInit = (props) => {
   let { registerInitData, setRegisterInit, setLogout } = props;
   let walletPluginPanelContext = React.useContext(WalletPluginPanelContext);
+  let sessionData = React.useContext(SessionContext);
 
   const getProofAndInsert = (account: Account): RegisterProof => {
     // TODO send to backend api for <notExistProof, newAccountRoot, existProof>
@@ -59,11 +61,14 @@ const RegisterInit = (props) => {
           };
           walletPluginPanelContext.setVisible(true);
 
+          // to wait for tx confirmed
           setTimeout(() => {
             (document.querySelector("#txConfirmed") as HTMLElement).style.display = 'block';
 
             // close model, and show logOut btn
             setTimeout(() => {
+              sessionData.account = account;
+
               console.log('to setLogout...');
               setRegisterInit(false);
               setLogout(true);

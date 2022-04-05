@@ -4,6 +4,7 @@ import styles from './index.module.less'
 import styled from 'styled-components'
 import { WalletPluginPanelContext } from '@/context/PageContext'
 import { WalletPluginPanelBtnEnums } from '@/common/enums/WalletPluginPanelBtnEnums';
+import { WalletContext } from '@/context/WalletContext';
 
 const { TextArea } = Input
 
@@ -21,6 +22,8 @@ const AntModalWrapper = styled.div`
 `
 export const WalletPluginPanel = () => {
   const [visible, setVisible] = React.useState(false);
+  let walletData = React.useContext(WalletContext);
+
   let walletPluginPanelContext = React.useContext(WalletPluginPanelContext);
   walletPluginPanelContext.setVisible = setVisible;
   let targetBtn = walletPluginPanelContext.targetBtn;
@@ -65,12 +68,15 @@ export const WalletPluginPanel = () => {
       >
         <div className={styles.walletPluginPanel}>
           <div>
+            <span>wallet balance:  <span style={{ 'color': 'green' }}>{walletData.balance} Mina</span></span>
+          </div>
+          <div>
             <span>public key:</span>
-            <TextArea id='pubKey' rows={5} />
+            <TextArea id='pubKey' rows={5} value={walletData.publicKey} />
           </div>
           <div>
             <span>private key:</span>
-            <TextArea id='privKey' rows={3} />
+            <TextArea id='privKey' rows={3} value={walletData.privateKey} />
           </div>
           <div><Button className={styles.encryptBtn} onClick={encryptData} disabled={WalletPluginPanelBtnEnums.Encryption === targetBtn ? false : true} > encrypt </Button> <br /></div>
           <div><Button className={styles.decryptBtn} onClick={decryptData} disabled={WalletPluginPanelBtnEnums.Decryption === targetBtn ? false : true}> decrypt </Button> <br /></div>

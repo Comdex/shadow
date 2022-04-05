@@ -5,6 +5,8 @@ import { AccountSecret, Account } from "@/common/models/account2";
 import { WalletPluginPanelContext } from '@/context/PageContext';
 import { WalletPluginPanelBtnEnums } from '@/common/enums/WalletPluginPanelBtnEnums';
 import { SessionContext } from '@/context/SessionContext';
+import { WalletContext } from '@/context/WalletContext';
+import { useHistory } from 'react-router';
 
 const { Title } = Typography;
 
@@ -15,9 +17,12 @@ interface RegisterProof {
 }
 
 const RegisterInit = (props) => {
+  let history = useHistory();
+
   let { registerInitData, setRegisterInit, setLogout } = props;
   let walletPluginPanelContext = React.useContext(WalletPluginPanelContext);
   let sessionData = React.useContext(SessionContext);
+  let walletData = React.useContext(WalletContext);
 
   const getProofAndInsert = (account: Account): RegisterProof => {
     // TODO send to backend api for <notExistProof, newAccountRoot, existProof>
@@ -68,10 +73,12 @@ const RegisterInit = (props) => {
             // close model, and show logOut btn
             setTimeout(() => {
               sessionData.account = account;
-
+              walletData.balance = 10;
               console.log('to setLogout...');
               setRegisterInit(false);
               setLogout(true);
+
+              history.push("/deposit");
             }, 1000);
           }, 2000);
 

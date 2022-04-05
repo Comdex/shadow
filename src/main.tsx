@@ -7,14 +7,17 @@ import routes from './routes'
 import { WalletPluginPanelContext } from './context/PageContext'
 import { SessionContext, SessionData } from "./context/SessionContext"
 import { WalletPluginPanelBtnEnums } from './common/enums/WalletPluginPanelBtnEnums'
+import { WalletContext, WalletData } from './context/WalletContext'
 
 ReactDOM.render(
   // <React.StrictMode>
-  <WalletPluginPanelContext.Provider value={{ setVisible: () => { console.log('default WalletPluginPanelContext'); }, targetBtn: WalletPluginPanelBtnEnums.Sign, currentCallBack: () => { console.log('default currentCallBack'); } }}>
-    <SessionContext.Provider value={new SessionData()}>
-      <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
-    </SessionContext.Provider>
-  </WalletPluginPanelContext.Provider>
+  <WalletContext.Provider value={new WalletData()}>
+    <WalletPluginPanelContext.Provider value={{ setVisible: () => { console.log('default WalletPluginPanelContext'); }, targetBtn: WalletPluginPanelBtnEnums.Sign, currentCallBack: () => { console.log('default currentCallBack'); } }}>
+      <SessionContext.Provider value={new SessionData()}>
+        <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
+      </SessionContext.Provider>
+    </WalletPluginPanelContext.Provider>
+  </WalletContext.Provider>
   // </React.StrictMode>
   ,
   document.getElementById('root')

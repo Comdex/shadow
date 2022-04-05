@@ -8,6 +8,8 @@ import { LoginInit } from './LoginInit';
 import RegisterInit from './RegisterInit';
 import { Account, AccountSecret } from '@/common/models/account2';
 import { SessionContext } from '@/context/SessionContext';
+import { WalletContext } from '@/context/WalletContext';
+import { useHistory } from 'react-router';
 
 const AntModalWrapper = styled.div`
   .ant-modal-content {
@@ -17,7 +19,7 @@ const AntModalWrapper = styled.div`
     background-color: #FFFFCC;
   }
 `
-export const ConnectApp = () => {
+export const ConnectApp = (props) => {
   const [visible, setVisible] = React.useState(false);
   const [loginInit, setLoginInit] = React.useState(false);
   const [goRegister, setGoRegister] = React.useState(false);
@@ -134,8 +136,11 @@ const LoginBtn = (props) => {
 const LogoutBtn = (props) => {
   let { setVisible, setLoginInit, setGoRegister, setRegisterInit, setRegisterInitData, setLogout } = props;
   let sessionData = React.useContext(SessionContext);
+  let walletData = React.useContext(WalletContext);
+  let history = useHistory();
 
   return <Button className={styles.logInBtn} onClick={() => {
+    walletData.balance = 0;
     sessionData.account = null;
     setLoginInit(false);
     setGoRegister(false);
@@ -143,5 +148,7 @@ const LogoutBtn = (props) => {
     setRegisterInitData(null);
     setLogout(false);
     setVisible(false);
+
+    history.push("/deposit");
   }}> Log out </Button>
 }

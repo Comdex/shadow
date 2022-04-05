@@ -48,7 +48,9 @@ export const WalletTrigger = (props) => {
       callBackFunc = (amountToWallet) => {
         console.log('Deposit to trigger wallet and callback...');
         console.log('sessionData.account.secret.balance before:' + sessionData.account.secret.balance);
-        sessionData.account.secret.balance += amountToWallet;
+        if (amountToWallet > 0) {
+          sessionData.account.secret.balance += amountToWallet;
+        }
         console.log('sessionData.account.secret.balance later:' + sessionData.account.secret.balance);
 
         console.log("location:", location);
@@ -60,7 +62,9 @@ export const WalletTrigger = (props) => {
       callBackFunc = (amountToWallet) => {
         console.log('Transfer to trigger wallet and callback...');
         console.log('sessionData.account.secret.balance before:' + sessionData.account.secret.balance);
-        sessionData.account.secret.balance -= amountToWallet;
+        if (sessionData.account.secret.balance >= amountToWallet && amountToWallet > 0) {
+          sessionData.account.secret.balance -= amountToWallet;
+        }
         console.log('sessionData.account.secret.balance later:' + sessionData.account.secret.balance);
 
         console.log("location:", location);
@@ -71,7 +75,10 @@ export const WalletTrigger = (props) => {
       btnTxt = 'Withdraw'
       callBackFunc = (amountToWallet) => {
         console.log('Withdraw to trigger wallet and callback...');
-        sessionData.account.secret.balance -= amountToWallet;
+        if (sessionData.account.secret.balance >= amountToWallet && amountToWallet > 0) {
+          sessionData.account.secret.balance -= amountToWallet;
+          walletData.balance += amountToWallet;
+        }
 
         console.log("location:", location);
         history.push(location.pathname);
@@ -90,9 +97,20 @@ export const WalletTrigger = (props) => {
             return;
           }
 
-          walletPluginPanelContext.currentCallBack = callBackFunc;
-          walletPluginPanelContext.amount = Number.parseInt(xamountToWallet);
-          walletPluginPanelContext.setVisible(true);
+          switch (tagName) {
+            case BizEnums.Withdraw:
+              callBackFunc(Number.parseInt(xamountToWallet));
+              break;
+            case BizEnums.Transfer:
+              callBackFunc(Number.parseInt(xamountToWallet));
+              break;
+            default:
+              walletPluginPanelContext.currentCallBack = callBackFunc;
+              walletPluginPanelContext.amount = Number.parseInt(xamountToWallet);
+              walletPluginPanelContext.setVisible(true);
+              break;
+          }
+
         }}
         disabled={isDisabled}
       >

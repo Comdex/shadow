@@ -84,20 +84,22 @@ export const WalletPluginPanel = () => {
           <div>
             <span>private key:</span>
             <TextArea id='privKey' rows={3} value={walletData.privateKey} />
-            <span style={{ 'display': (walletPluginPanelContext.amount ? 'inline-block' : 'none') }}>transfer amount: {walletPluginPanelContext.amount}</span>
-            <span style={{
-              'display': (walletPluginPanelContext.amount ? 'inline-block' : 'none'),
-              'color': (walletData.balance < walletPluginPanelContext.amount ? 'red' : 'green')
-            }}>
-              {walletData.balance < walletPluginPanelContext.amount ? '×' : '√'}
-            </span>
+            <h4>
+              <span style={{ 'display': (walletPluginPanelContext.amount ? 'inline-block' : 'none') }}>transfer amount: &nbsp;&nbsp;</span>
+              <span style={{
+                'display': (walletPluginPanelContext.amount ? 'inline-block' : 'none'),
+                'color': (walletData.balance < walletPluginPanelContext.amount ? 'red' : 'green')
+              }}>
+                {walletPluginPanelContext.amount} &nbsp;&nbsp;&nbsp; {walletData.balance < walletPluginPanelContext.amount ? '×' : '√'}
+              </span>
+            </h4>
           </div>
           <div><Button className={styles.encryptBtn} onClick={encryptData} disabled={WalletPluginPanelBtnEnums.Encryption === targetBtn ? false : true} > encrypt </Button> <br /></div>
           <div><Button className={styles.decryptBtn} onClick={decryptData} disabled={WalletPluginPanelBtnEnums.Decryption === targetBtn ? false : true}> decrypt </Button> <br /></div>
           <div><Button className={styles.signBtn} onClick={signData} disabled={WalletPluginPanelBtnEnums.Sign === targetBtn && walletData.balance >= walletPluginPanelContext.amount ? false : true}> sign </Button> <br /></div>
         </div>
       </Modal>
-    </AntModalWrapper>
+    </AntModalWrapper >
   );
 }
 

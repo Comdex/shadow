@@ -3,6 +3,7 @@ import { Modal, Button, Input, Typography } from 'antd';
 import styles from './index.module.less'
 import styled from 'styled-components'
 import { WalletPluginPanelContext } from '@/context/PageContext'
+import { WalletPluginPanelBtnEnums } from '@/common/enums/WalletPluginPanelBtnEnums';
 
 const { TextArea } = Input
 
@@ -22,25 +23,41 @@ export const WalletPluginPanel = () => {
   const [visible, setVisible] = React.useState(false);
   let walletPluginPanelContext = React.useContext(WalletPluginPanelContext);
   walletPluginPanelContext.setVisible = setVisible;
+  let targetBtn = walletPluginPanelContext.targetBtn;
+  let currentCallBack = walletPluginPanelContext.currentCallBack;
 
   const encryptData = () => {
     // to get pub key & priv key
+    currentCallBack();
 
+    walletPluginPanelContext.targetBtn = WalletPluginPanelBtnEnums.Sign;
+    walletPluginPanelContext.currentCallBack = () => { }
+    setVisible(false);
   }
 
   const decryptData = () => {
     // to get pub key & priv key
+    currentCallBack();
+
+    walletPluginPanelContext.targetBtn = WalletPluginPanelBtnEnums.Sign;
+    walletPluginPanelContext.currentCallBack = () => { }
+    setVisible(false);
   }
 
   const signData = () => {
     // to get pub key & priv key
+    currentCallBack();
+
+    walletPluginPanelContext.targetBtn = WalletPluginPanelBtnEnums.Sign;
+    walletPluginPanelContext.currentCallBack = () => { }
+    setVisible(false);
   }
 
   return (
     <AntModalWrapper>
       <Modal
         getContainer={false}
-        closable={true}
+        closable={false}
         visible={visible}
         onCancel={() => { setVisible(false); }}
         footer={null}
@@ -55,9 +72,9 @@ export const WalletPluginPanel = () => {
             <span>private key:</span>
             <TextArea id='privKey' rows={3} />
           </div>
-          <div><Button className={styles.encryptBtn} onClick={encryptData}> encrypt </Button> <br /></div>
-          <div><Button className={styles.decryptBtn} onClick={decryptData}> decrypt </Button> <br /></div>
-          <div><Button className={styles.signBtn} onClick={signData}> sign </Button> <br /></div>
+          <div><Button className={styles.encryptBtn} onClick={encryptData} disabled={WalletPluginPanelBtnEnums.Encryption === targetBtn ? false : true} > encrypt </Button> <br /></div>
+          <div><Button className={styles.decryptBtn} onClick={decryptData} disabled={WalletPluginPanelBtnEnums.Decryption === targetBtn ? false : true}> decrypt </Button> <br /></div>
+          <div><Button className={styles.signBtn} onClick={signData} disabled={WalletPluginPanelBtnEnums.Sign === targetBtn ? false : true}> sign </Button> <br /></div>
         </div>
       </Modal>
     </AntModalWrapper>

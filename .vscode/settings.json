@@ -14,5 +14,6 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "[typescriptreact]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
-  }
+  },
+  "js/ts.implicitProjectConfig.experimentalDecorators": true
 }

@@ -2,9 +2,9 @@ import { Account } from '@/common/models/account2';
 import React from 'react'
 
 export class WalletData {
-  balance: number = 0;
-  publicKey: string = 'publicKey_0x73i8eui7dfjksjfdskfldjkafiour3897kdflsjfiuljcxkljfkdjlkfjd';
-  privateKey: string = 'privateKey_0x34878456456jkujiofeklfjdfkdljf';
+  balance: number = 10;
+  publicKey: string = 'B62qpaQoLTbc5hAiKN4JkxjkcBikokQjMn1tXWU9LRHFh2KhE7XaEz6';
+  privateKey: string = 'EKE9mmmfZXmrjqadHesSKm4Ujh686Rx37rqvMfBSCYZdnbhcQ2Ve';
 }
 
 export const WalletContext = React.createContext<WalletData>(new WalletData());

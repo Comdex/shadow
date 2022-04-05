@@ -30,29 +30,36 @@ export const WalletPluginPanel = () => {
   let currentCallBack = walletPluginPanelContext.currentCallBack;
 
   const encryptData = () => {
-    // to get pub key & priv key
-    currentCallBack();
-
     walletPluginPanelContext.targetBtn = WalletPluginPanelBtnEnums.Sign;
     walletPluginPanelContext.currentCallBack = () => { }
     setVisible(false);
+
+    // to get pub key & priv key
+    currentCallBack();
   }
 
   const decryptData = () => {
-    // to get pub key & priv key
-    currentCallBack();
-
     walletPluginPanelContext.targetBtn = WalletPluginPanelBtnEnums.Sign;
     walletPluginPanelContext.currentCallBack = () => { }
     setVisible(false);
+
+    // to get pub key & priv key
+    currentCallBack();
   }
 
   const signData = () => {
-    // to get pub key & priv key
-    currentCallBack();
-
+    let amount0 = walletPluginPanelContext.amount;
+    console.log('walletPluginPanelContext.amount = ', walletPluginPanelContext.amount);
+    if (walletData.balance > walletPluginPanelContext.amount) {
+      walletData.balance -= walletPluginPanelContext.amount;
+      console.log('after operation, walletData.balance = ', walletData.balance);
+    }
     walletPluginPanelContext.targetBtn = WalletPluginPanelBtnEnums.Sign;
     walletPluginPanelContext.currentCallBack = () => { }
+    walletPluginPanelContext.amount = 0;
+
+    // to get pub key & priv key
+    currentCallBack(amount0);
     setVisible(false);
   }
 
@@ -77,10 +84,17 @@ export const WalletPluginPanel = () => {
           <div>
             <span>private key:</span>
             <TextArea id='privKey' rows={3} value={walletData.privateKey} />
+            <span style={{ 'display': (walletPluginPanelContext.amount ? 'inline-block' : 'none') }}>transfer amount: {walletPluginPanelContext.amount}</span>
+            <span style={{
+              'display': (walletPluginPanelContext.amount ? 'inline-block' : 'none'),
+              'color': (walletData.balance < walletPluginPanelContext.amount ? 'red' : 'green')
+            }}>
+              {walletData.balance < walletPluginPanelContext.amount ? '×' : '√'}
+            </span>
           </div>
           <div><Button className={styles.encryptBtn} onClick={encryptData} disabled={WalletPluginPanelBtnEnums.Encryption === targetBtn ? false : true} > encrypt </Button> <br /></div>
           <div><Button className={styles.decryptBtn} onClick={decryptData} disabled={WalletPluginPanelBtnEnums.Decryption === targetBtn ? false : true}> decrypt </Button> <br /></div>
-          <div><Button className={styles.signBtn} onClick={signData} disabled={WalletPluginPanelBtnEnums.Sign === targetBtn ? false : true}> sign </Button> <br /></div>
+          <div><Button className={styles.signBtn} onClick={signData} disabled={WalletPluginPanelBtnEnums.Sign === targetBtn && walletData.balance >= walletPluginPanelContext.amount ? false : true}> sign </Button> <br /></div>
         </div>
       </Modal>
     </AntModalWrapper>

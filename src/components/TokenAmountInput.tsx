@@ -7,7 +7,7 @@ import { WalletContext } from '@/context/WalletContext';
 import { BizEnums } from '@/common/enums/BizEnums';
 
 export const TokenAmountInput = (props) => {
-  let { amountInput, setAmountInput, tagName } = props;
+  let { amountInput, setAmountInput, tagName, setAmountToTriggerWallet } = props;
   let sessionData = React.useContext(SessionContext);
   let walletData = React.useContext(WalletContext);
 
@@ -27,7 +27,9 @@ export const TokenAmountInput = (props) => {
       </div>
     </div>
     <div>
-      <Input placeholder="token amount" value={props.amountInput} />
+      <Input placeholder="token amount" value={props.amountInput} onChange={e => {
+        setAmountInput(e.target.value);
+      }} id={'tokenAmountInput'} />
     </div>
   </>
 }

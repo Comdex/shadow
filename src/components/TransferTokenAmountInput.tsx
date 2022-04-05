@@ -19,7 +19,7 @@ export const TransferTokenAmountInput = (props) => {
       </div>
     </div>
     <div>
-      <Input placeholder="token amount" value={amountInput} />
+      <Input placeholder="token amount" value={amountInput} id={'tokenAmountInput'} />
     </div>
   </>
 }

@@ -12,7 +12,7 @@ import { WalletContext, WalletData } from './context/WalletContext'
 ReactDOM.render(
   // <React.StrictMode>
   <WalletContext.Provider value={new WalletData()}>
-    <WalletPluginPanelContext.Provider value={{ setVisible: () => { console.log('default WalletPluginPanelContext'); }, targetBtn: WalletPluginPanelBtnEnums.Sign, currentCallBack: () => { console.log('default currentCallBack'); } }}>
+    <WalletPluginPanelContext.Provider value={{ setVisible: () => { console.log('default WalletPluginPanelContext'); }, targetBtn: WalletPluginPanelBtnEnums.Sign, currentCallBack: () => { console.log('default currentCallBack'); }, amount: 0 }}>
       <SessionContext.Provider value={new SessionData()}>
         <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
       </SessionContext.Provider>

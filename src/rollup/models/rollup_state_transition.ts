@@ -5,9 +5,9 @@ export class RollupStateTransition extends CircuitValue {
   @prop source: RollupState;
   @prop target: RollupState;
 
-  constructor(s: RollupState, t: RollupState) {
+  constructor(source: RollupState, target: RollupState) {
     super();
-    this.source = s;
-    this.target = t;
+    this.source = source;
+    this.target = target;
   }
 }

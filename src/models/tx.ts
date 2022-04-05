@@ -9,7 +9,8 @@ import {
   UInt32,
   PublicKey,
   PrivateKey,
-  Encryption
+  Encryption,
+  Group
 } from 'snarkyjs';
 import { TxCipherText } from './cipher_text';
 
@@ -94,5 +95,13 @@ export class ShieldTxReceipt extends CircuitValue {
 
   hash() {
     return Poseidon.hash(this.toFields());
+  }
+
+  static get zero(): ShieldTxReceipt {
+    return new ShieldTxReceipt(
+      UInt32.zero,
+      new TxCipherText(Group.ofFields(Array(255).fill(Field.zero)), Array(8).fill(Field.zero)),
+      UInt32.zero
+    );
   }
 }

@@ -35,5 +35,5 @@ export class AccountCipherText extends CircuitValue {
     super();
     this.publicKey = publicKey;
     this.cipherText = cipherText;
-
+  }
 }

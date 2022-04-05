@@ -1,11 +1,11 @@
 import { KeyedMerkleStore } from '@/lib/data_store/keyed_data_store';
 import { Bool, CircuitValue, Field } from 'snarkyjs';
-import { Account } from './account';
-import { ShieldTxReceipt, TxReciptPool } from './tx';
+import { Account } from '../models/account';
+import { ShieldTxReceipt } from '../models/tx';
 
 export type AccountDb = KeyedMerkleStore<string, Account>;
 
-class WrapField extends CircuitValue {
+export class WrapField extends CircuitValue {
   v: Field;
 
   constructor(v: Field) {
@@ -16,4 +16,4 @@ class WrapField extends CircuitValue {
 export type PendingRcTxRootDb = KeyedMerkleStore<string, WrapField>;
 
 export type PendingRcTxDb = KeyedMerkleStore<string, ShieldTxReceipt>;
-export var userSubTreesMap = new Map<string, PendingRcTxDb>();
+export const userSubTreesMap = new Map<string, PendingRcTxDb>();

@@ -32,6 +32,7 @@ class ShadowZkapp extends SmartContract {
   @state(UInt64) fees = State<UInt64>();
   @state(PublicKey) operator = State<PublicKey>();
 
+  // eslint-disable-next-line max-params
   deploy(
     initialBalance: UInt64,
     accountsCommitment: Field,
@@ -54,16 +55,17 @@ class ShadowZkapp extends SmartContract {
     this.self.update.permissions.setValue(perms);
   }
 
-  @method async register(name: Field[], newAccount: AccountSecret, walletPubKey: PublicKey) {
+  @method
+  async register(name: Field[], newAccount: AccountSecret, walletPubKey: PublicKey) {
     newAccount.balance.assertEquals(UInt64.zero);
     newAccount.pwdHash.equals(Field.zero).assertEquals(false);
 
-    //generate shield keypair
+    // generate shield keypair
     const shieldPriKey = PrivateKey.random();
     const shieldPubKey = shieldPriKey.toPublicKey();
 
     let shieldPriKeyData: Field[] = shieldPriKey.toFields();
-    //encrypt the prikey to save
+    // encrypt the prikey to save
     let encryptedShieldPriKeyObj = Encryption.encrypt(shieldPriKeyData, walletPubKey);
     let encryptedShieldPriKey = new PrivateKeyCipherText(
       encryptedShieldPriKeyObj.publicKey,
@@ -96,6 +98,7 @@ class ShadowZkapp extends SmartContract {
     */
   }
 
+  // eslint-disable-next-line max-params
   @method
   async deposit(
     depositor: Party<UInt32>,
@@ -134,8 +137,8 @@ class ShadowZkapp extends SmartContract {
       rollupProof.publicInput.source.pendingRcTxRootsCommitment
     );
 
-    //todo
-    //check condition
+    // todo
+    // check condition
 
     this.accountsCommitment.set(rollupProof.publicInput.target.accountsCommitment);
     this.pendingRcTxRootsCommitment.set(rollupProof.publicInput.target.pendingRcTxRootsCommitment);

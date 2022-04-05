@@ -28,6 +28,7 @@ export const WalletTrigger = (props) => {
   const [amountToWallet, setAmountToWallet] = React.useState(0);
   const history = useHistory();
   const location = useLocation();
+  console.log("WalletTrigger.location=", location);
 
   // let { tagName, setAmountToWalletCallback } = props;
   // setAmountToWalletCallback(setAmountToWallet);
@@ -58,7 +59,9 @@ export const WalletTrigger = (props) => {
       btnTxt = 'Transfer';
       callBackFunc = (amountToWallet) => {
         console.log('Transfer to trigger wallet and callback...');
+        console.log('sessionData.account.secret.balance before:' + sessionData.account.secret.balance);
         sessionData.account.secret.balance -= amountToWallet;
+        console.log('sessionData.account.secret.balance later:' + sessionData.account.secret.balance);
 
         console.log("location:", location);
         history.push(location.pathname);

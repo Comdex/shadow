@@ -30,7 +30,7 @@ export const TransferTokenAmountInput = (props) => {
       </div>
     </div>
     <div>
-      <Input placeholder="token amount" value={amountInput} onChange={e => {
+      <Input placeholder="token amount" value={amountInput} id={'tokenAmountInput'} onChange={e => {
         history.push({
           'pathname': location.pathname,
           state: { 'amountInput': e.target.value }

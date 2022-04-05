@@ -10,8 +10,6 @@ import { TransferTokenAmountInput } from '@/components/TransferTokenAmountInput'
 import { BizEnums } from '@/common/enums/BizEnums';
 import { useHistory, useLocation } from 'react-router';
 
-let amountInput = 0;
-
 export const TransferPage: React.FC<any> = (props) => {
   let location = useLocation();
   console.log('TransferPage.location=', location);

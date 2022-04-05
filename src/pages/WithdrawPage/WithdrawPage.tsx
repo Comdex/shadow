@@ -8,21 +8,19 @@ import { OpFeePanel } from '@/components/OpFeePanel';
 import { WalletTrigger } from '@/components/WalletTrigger';
 import { TokenInputPanel } from '@/components/TokenInputPanel';
 import { BizEnums } from '@/common/enums/BizEnums';
+import { useLocation } from 'react-router';
 
 let amountToWallet = 0;
 
 export const WithdrawPage: React.FC<any> = (props) => {
   const [visible, setVisible] = React.useState(true);
-
-  const amountBackToParent = (amount0: number) => {
-    amountToWallet = amount0;
-    console.log('amountBackToParent...amountToWallet=', amountToWallet);
-    //setAmountToTriggerWalletBtnState(amount0);
-  }
+  let location = useLocation();
+  console.log('WithdrawPage.location=', location);
+  let amountInput = location.state ? (location.state['amountInput'] ? location.state['amountInput'] : 0) : 0;
 
   return (
     <div className={styles.depositContainer}>
-      <TokenInputPanel tagName={BizEnums.Withdraw} setAmountToTriggerWallet={amountBackToParent} />
+      <TokenInputPanel tagName={BizEnums.Withdraw} amountInput={amountInput} />
       <div>
         <span>Recipient address</span><br />
         <Input placeholder="recipient address" />
@@ -31,7 +29,7 @@ export const WithdrawPage: React.FC<any> = (props) => {
         <span>Your passcode</span><br />
         <Input placeholder="your passcode" />
       </div>
-      <div><OpFeePanel /></div>
+      <div><OpFeePanel amount={amountInput} /></div>
       <div>
         <WalletTrigger tagName={BizEnums.Withdraw} />
       </div>

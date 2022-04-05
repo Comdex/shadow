@@ -7,28 +7,21 @@ import { TokenAmountInput } from '@/components/TokenAmountInput';
 import { WalletTrigger } from '@/components/WalletTrigger';
 import { TokenInputPanel } from '@/components/TokenInputPanel';
 import { BizEnums } from '@/common/enums/BizEnums';
+import { useLocation } from 'react-router';
 
 let amountToWallet = 0;
 
 export const DepositPage: React.FC<any> = (props) => {
   const [visible, setVisible] = React.useState(true);
-
-  // let setAmountToTriggerWalletBtnState = (amount0: number) => { };
-  // const setAmountToWalletCallback = (setAmountToTriggerWalletBtnState1) => {
-  //   setAmountToTriggerWalletBtnState = setAmountToTriggerWalletBtnState1;
-  // }
-
-  const amountBackToParent = (amount0: number) => {
-    amountToWallet = amount0;
-    console.log('amountBackToParent...amountToWallet=', amountToWallet);
-    //setAmountToTriggerWalletBtnState(amount0);
-  }
+  let location = useLocation();
+  console.log('DepositPage.location=', location);
+  let amountInput = location.state ? (location.state['amountInput'] ? location.state['amountInput'] : 0) : 0;
 
   return (
     <div className={styles.depositContainer}>
-      <TokenInputPanel tagName={BizEnums.Deposit} setAmountToTriggerWallet={amountBackToParent} />
+      <TokenInputPanel tagName={BizEnums.Deposit} amountInput={amountInput} />
       <div>
-        <WalletTrigger tagName={BizEnums.Deposit} amountToWallet={amountToWallet} />
+        <WalletTrigger tagName={BizEnums.Deposit} amountToWallet={amountInput} />
       </div>
     </div>
   );

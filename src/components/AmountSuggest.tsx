@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Modal, Button, Input, Typography } from 'antd';
 import styles from './index.module.less'
 import styled from 'styled-components'
+import { useHistory, useLocation } from 'react-router';
 
 const btnStyles = { 'backgroundColor': 'transparent', 'width': '5rem' }
 const divStyles = `{
@@ -11,7 +12,14 @@ const divStyles = `{
 }`
 
 export const AmountSuggest = (props) => {
-  let { amountInput, setAmountInput } = props;
+  let history = useHistory();
+  let location = useLocation();
+  const setAmountInput = (amount: number) => {
+    history.push({
+      'pathname': location.pathname,
+      state: { 'amountInput': amount }
+    });
+  }
 
   return <div className={divStyles}>
     <span>suggest amount</span><br />

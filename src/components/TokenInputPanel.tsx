@@ -7,18 +7,14 @@ import { AmountSuggest } from '@/components/AmountSuggest';
 import { TokenAmountInput } from '@/components/TokenAmountInput';
 
 export const TokenInputPanel = (props) => {
-  let { tagName, setAmountToTriggerWallet } = props;
-
-  const [amountInput, setAmountInput] = React.useState(0);
-
-  setAmountToTriggerWallet(amountInput);
+  let { tagName, amountInput } = props;
 
   return <div>
     <div>
-      <AmountSuggest amountInput={amountInput} setAmountInput={setAmountInput} />
+      <AmountSuggest />
     </div>
     <div>
-      <TokenAmountInput amountInput={amountInput} setAmountInput={setAmountInput} tagName={tagName} setAmountToTriggerWallet={setAmountToTriggerWallet} />
+      <TokenAmountInput tagName={tagName} amountInput={amountInput} />
     </div>
   </div>
 }
